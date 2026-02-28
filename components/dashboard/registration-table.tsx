@@ -28,16 +28,25 @@ export default function RegistrationTable({
     groups: any;
 }) {
     const [activeTab, setActiveTab] = useState("All");
+    const [filterMode, setFilterMode] = useState<"category" | "subadmin">("category");
     const [isPending, startTransition] = useTransition();
 
-    const currentData = groups[activeTab] || [];
+    // Get unique subadmins from the data
+    const subadmins = Array.from(new Set(data.map(item => item.subadmin?.name).filter(Boolean))) as string[];
+
+    // Calculate dynamic data based on filter mode
+    const currentData = filterMode === "category"
+        ? (groups[activeTab] || [])
+        : activeTab === "All"
+            ? data
+            : data.filter(item => item.subadmin?.name === activeTab);
 
     const handleExport = () => {
         const totals = {
             count: currentData.length,
             amount: currentData.reduce((acc: number, curr: any) => acc + curr.fees, 0)
         };
-        generateReportPDF(`${title} - ${activeTab} Category`, currentData, totals);
+        generateReportPDF(`${title} - ${activeTab} (${filterMode})`, currentData, totals);
     };
 
     const handleDelete = async (id: string) => {
@@ -56,23 +65,50 @@ export default function RegistrationTable({
     return (
         <Card className="shadow-2xl border-none overflow-hidden rounded-[1.5rem]">
             <CardHeader className="border-b bg-white flex flex-col sm:flex-row items-center justify-between gap-4 p-6">
-                <div className="flex items-center space-x-3">
-                    <div className="w-2 h-8 bg-rotaract-red rounded-full" />
-                    <CardTitle className="text-2xl font-black text-rotaract-blue tracking-tight">{title}</CardTitle>
+                <div className="flex items-center space-x-3 text-center sm:text-left">
+                    <div className="w-2 h-8 bg-rotaract-red rounded-full hidden sm:block" />
+                    <div>
+                        <CardTitle className="text-2xl font-black text-rotaract-blue tracking-tight">{title}</CardTitle>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Filter by: {filterMode === "category" ? "Age Groups" : "Subadmins"}</p>
+                    </div>
                 </div>
-                <Button onClick={handleExport} className="w-full sm:w-auto bg-rotaract-red hover:bg-red-700 font-black text-xs uppercase tracking-widest h-11 px-6 rounded-xl shadow-lg shadow-red-100 transition-all active:scale-95">
-                    <FileDown className="mr-2 h-4 w-4" />
-                    Export PDF
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div className="flex bg-gray-100 p-1 rounded-xl h-11 border border-gray-200 shadow-inner">
+                        <button
+                            onClick={() => { setFilterMode("category"); setActiveTab("All"); }}
+                            className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "category" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
+                        >
+                            Cats
+                        </button>
+                        <button
+                            onClick={() => { setFilterMode("subadmin"); setActiveTab("All"); }}
+                            className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "subadmin" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
+                        >
+                            Users
+                        </button>
+                    </div>
+                    <Button onClick={handleExport} className="bg-rotaract-red hover:bg-red-700 font-black text-xs uppercase tracking-widest h-11 px-6 rounded-xl shadow-lg shadow-red-100 transition-all active:scale-95">
+                        <FileDown className="mr-2 h-4 w-4" />
+                        Export
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent className="p-0">
-                <Tabs defaultValue="All" onValueChange={setActiveTab} className="w-full">
-                    <div className="px-6 py-3 border-b bg-gray-50/50">
-                        <TabsList className="bg-white border rounded-xl p-1 h-12">
-                            <TabsTrigger value="All" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">All</TabsTrigger>
-                            <TabsTrigger value="0-12" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">0–12</TabsTrigger>
-                            <TabsTrigger value="13-16" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">13–16</TabsTrigger>
-                            <TabsTrigger value="Open" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">Open</TabsTrigger>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <div className="px-6 py-3 border-b bg-gray-50/50 overflow-x-auto">
+                        <TabsList className="bg-white border rounded-xl p-1 h-12 inline-flex">
+                            <TabsTrigger value="All" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white min-w-[60px]">All</TabsTrigger>
+                            {filterMode === "category" ? (
+                                <>
+                                    <TabsTrigger value="0-12" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">0–12</TabsTrigger>
+                                    <TabsTrigger value="13-16" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">13–16</TabsTrigger>
+                                    <TabsTrigger value="Open" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">Open</TabsTrigger>
+                                </>
+                            ) : (
+                                subadmins.map(name => (
+                                    <TabsTrigger key={name} value={name} className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white whitespace-nowrap px-4">{name}</TabsTrigger>
+                                ))
+                            )}
                         </TabsList>
                     </div>
 
