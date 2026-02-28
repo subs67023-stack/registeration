@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
             doc.fontSize(12).text(`Type: ${type || "All"}`, { align: "center" });
             doc.moveDown();
 
-            registrations.forEach((reg, i) => {
+            registrations.forEach((reg: any, i: number) => {
                 doc.text(`${i + 1}. ${reg.registrationNumber} - ${reg.name} (${reg.ageGroup}) - Fee: ${reg.fees}`);
             });
 
