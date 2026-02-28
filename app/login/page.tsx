@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ShieldCheck } from "lucide-react";
-import Image from "next/image";
+import Logo from "@/components/logo";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -55,18 +55,7 @@ export default function LoginPage() {
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-white px-4 py-8">
             <div className="mb-8 text-center flex flex-col items-center">
                 <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center p-3 mb-4 shadow-2xl border border-indigo-100">
-                    <Image
-                        src="/logo.png"
-                        alt="Logo"
-                        width={60}
-                        height={60}
-                        className="object-contain"
-                        onError={(e) => {
-                            (e.target as any).style.display = 'none';
-                            const parent = (e.target as any).parentElement;
-                            if (parent) parent.innerHTML = '<span class="text-indigo-900 font-black text-3xl">R</span>';
-                        }}
-                    />
+                    <Logo width={60} height={60} />
                 </div>
                 <h1 className="text-3xl font-black text-indigo-950 tracking-tighter">Rotaract</h1>
                 <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-1">Management Portal</p>

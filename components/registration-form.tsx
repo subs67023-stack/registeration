@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle2, FileDown, RefreshCw, MessageCircle } from "lucide-react";
-import Image from "next/image";
+import Logo from "@/components/logo";
 
 const registrationSchema = z.object({
     name: z.string().min(2, "Name is required"),
@@ -130,18 +130,7 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
 
                 <div className="relative z-10 flex flex-col items-center sm:items-start">
                     <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2 mb-4 shadow-xl border border-white/30">
-                        <Image
-                            src="/logo.png"
-                            alt="Logo"
-                            width={50}
-                            height={50}
-                            className="object-contain"
-                            onError={(e) => {
-                                (e.target as any).style.display = 'none';
-                                const parent = (e.target as any).parentElement;
-                                if (parent) parent.innerHTML = '<span class="text-rotaract-red font-black text-2xl">R</span>';
-                            }}
-                        />
+                        <Logo width={50} height={50} />
                     </div>
                     <CardTitle className="text-3xl md:text-4xl font-black tracking-tighter">Event Registration</CardTitle>
                     <p className="text-white mt-1 font-medium text-sm opacity-80">Rotaract Club Participant Enrollment</p>
@@ -154,21 +143,21 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Personal Details</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
                             <div className="space-y-1.5">
-                                <Label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Full Name</Label>
-                                <Input id="name" {...register("name")} placeholder="As per documents" className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl" />
+                                <Label htmlFor="name" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Full Name</Label>
+                                <Input id="name" {...register("name")} placeholder="As per documents" className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl text-indigo-950" />
                                 {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="dob" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Date of Birth</Label>
-                                <Input id="dob" type="date" {...register("dob")} className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                <Label htmlFor="dob" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Date of Birth</Label>
+                                <Input id="dob" type="date" {...register("dob")} className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl text-indigo-950" />
                                 {errors.dob && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.dob.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="gender" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Gender</Label>
+                                <Label htmlFor="gender" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Gender</Label>
                                 <Select onValueChange={(val) => setValue("gender", val as "M" | "F")} defaultValue="M">
-                                    <SelectTrigger className="h-12 border-gray-100 bg-gray-50 rounded-xl">
+                                    <SelectTrigger className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 rounded-xl text-indigo-950">
                                         <SelectValue placeholder="Select Gender" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -179,8 +168,8 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="aadharNo" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Aadhar Number</Label>
-                                <Input id="aadharNo" {...register("aadharNo")} placeholder="12-digit number" maxLength={12} className="h-12 border-gray-100 bg-gray-50 rounded-xl font-mono tracking-widest" />
+                                <Label htmlFor="aadharNo" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Aadhar Number</Label>
+                                <Input id="aadharNo" {...register("aadharNo")} placeholder="12-digit number" maxLength={12} className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl font-mono tracking-widest text-indigo-950" />
                                 {errors.aadharNo && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.aadharNo.message}</p>}
                             </div>
                         </div>
@@ -190,27 +179,27 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Contact & Institution</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
                             <div className="space-y-1.5">
-                                <Label htmlFor="phone" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Phone Number</Label>
-                                <Input id="phone" {...register("phone")} placeholder="10-digit mobile" maxLength={10} className="h-12 border-gray-100 bg-gray-50 rounded-xl font-mono" />
+                                <Label htmlFor="phone" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Phone Number</Label>
+                                <Input id="phone" {...register("phone")} placeholder="10-digit mobile" maxLength={10} className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl font-mono text-indigo-950" />
                                 {errors.phone && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.phone.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="schoolCollege" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">School / College</Label>
-                                <Input id="schoolCollege" {...register("schoolCollege")} placeholder="Current institution" className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                <Label htmlFor="schoolCollege" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">School / College</Label>
+                                <Input id="schoolCollege" {...register("schoolCollege")} placeholder="Current institution" className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl text-indigo-950" />
                                 {errors.schoolCollege && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.schoolCollege.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="village" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Village Name</Label>
-                                <Input id="village" {...register("village")} placeholder="Home village" className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                <Label htmlFor="village" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Village Name</Label>
+                                <Input id="village" {...register("village")} placeholder="Home village" className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 transition-all rounded-xl text-indigo-950" />
                                 {errors.village && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.village.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="paymentMethod" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Payment Method</Label>
+                                <Label htmlFor="paymentMethod" className="text-xs font-bold text-indigo-900/60 uppercase tracking-wider ml-1">Payment Method</Label>
                                 <Select onValueChange={(val) => setValue("paymentMethod", val as "CASH" | "ONLINE")} defaultValue="CASH">
-                                    <SelectTrigger className="h-12 border-gray-100 bg-gray-50 rounded-xl">
+                                    <SelectTrigger className="h-12 border-gray-100 bg-white ring-1 ring-gray-100 focus:ring-indigo-500 rounded-xl text-indigo-950">
                                         <SelectValue placeholder="Select Method" />
                                     </SelectTrigger>
                                     <SelectContent>
