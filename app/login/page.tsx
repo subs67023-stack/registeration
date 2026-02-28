@@ -72,29 +72,32 @@ export default function LoginPage() {
                     </p>
                 </CardHeader>
                 <CardContent className="p-8 bg-white">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Email Address</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl"
-                            />
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-black ml-1">Email Address</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    spellCheck={false}
+                                    className="h-14 border-2 border-black bg-white focus:bg-white focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base placeholder:text-gray-400"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="password" className="text-xs font-black uppercase tracking-wider text-black ml-1">Password</Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    className="h-14 border-2 border-black bg-white focus:bg-white focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base placeholder:text-gray-400"
+                                />
+                            </div>
                         </div>
                         {error && (
                             <Alert variant="destructive" className="rounded-xl">
@@ -120,6 +123,6 @@ export default function LoginPage() {
                 <span className="w-1 h-1 bg-gray-300 rounded-full" />
                 <Link href="/register" className="text-indigo-600 hover:underline">Register Participant</Link>
             </div>
-        </div>
+        </div >
     );
 }
