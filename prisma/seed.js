@@ -1,9 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 
-const prisma = new PrismaClient({
-    accelerateUrl: process.env.DATABASE_URL,
-});
+const prisma = new PrismaClient();
 
 async function main() {
     const adminEmail = "admin@example.com";
