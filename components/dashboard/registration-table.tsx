@@ -78,13 +78,13 @@ export default function RegistrationTable({
                             onClick={() => { setFilterMode("category"); setActiveTab("All"); }}
                             className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "category" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                         >
-                            Cats
+                            By Group
                         </button>
                         <button
                             onClick={() => { setFilterMode("subadmin"); setActiveTab("All"); }}
                             className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "subadmin" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                         >
-                            Users
+                            By Team
                         </button>
                     </div>
                     <Button onClick={handleExport} className="bg-rotaract-red hover:bg-red-700 font-black text-xs uppercase tracking-widest h-11 px-6 rounded-xl shadow-lg shadow-red-100 transition-all active:scale-95">

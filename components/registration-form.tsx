@@ -185,21 +185,21 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="schoolCollege" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">School / College</Label>
-                                <Input id="schoolCollege" {...register("schoolCollege")} placeholder="Current institution" className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl text-indigo-950" />
+                                <Label htmlFor="schoolCollege" className="text-xs font-black text-black uppercase tracking-wider ml-1">School / College</Label>
+                                <Input id="schoolCollege" {...register("schoolCollege")} placeholder="Current institution" spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base" />
                                 {errors.schoolCollege && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.schoolCollege.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="village" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Village Name</Label>
-                                <Input id="village" {...register("village")} placeholder="Home village" className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl text-indigo-950" />
+                                <Label htmlFor="village" className="text-xs font-black text-black uppercase tracking-wider ml-1">Village Name</Label>
+                                <Input id="village" {...register("village")} placeholder="Home village" spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base" />
                                 {errors.village && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.village.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="paymentMethod" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Payment Method</Label>
+                                <Label htmlFor="paymentMethod" className="text-xs font-black text-black uppercase tracking-wider ml-1">Payment Method</Label>
                                 <Select onValueChange={(val) => setValue("paymentMethod", val as "CASH" | "ONLINE")} defaultValue="CASH">
-                                    <SelectTrigger className="h-12 border-indigo-200 bg-white shadow-sm focus:ring-indigo-500 rounded-xl text-indigo-950">
+                                    <SelectTrigger className="h-14 border-2 border-black bg-white shadow-sm focus:ring-indigo-600 rounded-xl text-black font-bold text-base">
                                         <SelectValue placeholder="Select Method" />
                                     </SelectTrigger>
                                     <SelectContent>
