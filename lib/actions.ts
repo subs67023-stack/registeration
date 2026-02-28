@@ -94,3 +94,18 @@ export async function deleteSubadmin(id: string) {
         return { success: false, error: error.message };
     }
 }
+
+export async function deleteRegistration(id: string) {
+    try {
+        await prisma.registration.delete({
+            where: { id },
+        });
+        revalidatePath("/admin");
+        revalidatePath("/subadmin");
+        revalidatePath("/admin/registrations");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Delete registration error:", error);
+        return { success: false, error: error.message };
+    }
+}

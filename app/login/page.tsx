@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -32,7 +34,6 @@ export default function LoginPage() {
             if (res?.error) {
                 setError("Invalid email or password");
             } else {
-                // Fetch session to check role and redirect
                 const response = await fetch("/api/auth/session");
                 const session = await response.json();
 
@@ -51,18 +52,40 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-indigo-50 px-4">
-            <Card className="w-full max-w-md shadow-2xl border-t-4 border-t-indigo-600">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center text-indigo-900">Sign In</CardTitle>
-                    <p className="text-center text-sm text-gray-500">
-                        Enter your credentials to access the registration portal
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-white px-4 py-8">
+            <div className="mb-8 text-center flex flex-col items-center">
+                <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center p-3 mb-4 shadow-2xl border border-indigo-100">
+                    <Image
+                        src="/logo.png"
+                        alt="Logo"
+                        width={60}
+                        height={60}
+                        className="object-contain"
+                        onError={(e) => {
+                            (e.target as any).style.display = 'none';
+                            const parent = (e.target as any).parentElement;
+                            if (parent) parent.innerHTML = '<span class="text-indigo-900 font-black text-3xl">R</span>';
+                        }}
+                    />
+                </div>
+                <h1 className="text-3xl font-black text-indigo-950 tracking-tighter">Rotaract</h1>
+                <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-1">Management Portal</p>
+            </div>
+
+            <Card className="w-full max-w-md shadow-[0_20px_50px_rgba(79,70,229,0.1)] border-none rounded-[2rem] overflow-hidden">
+                <CardHeader className="space-y-1 bg-indigo-900 text-white p-8">
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-2xl font-black tracking-tight">Sign In</CardTitle>
+                        <ShieldCheck className="h-6 w-6 text-indigo-300 opacity-50" />
+                    </div>
+                    <p className="text-xs text-indigo-200 opacity-70">
+                        Authorized personnel only. Enter your credentials.
                     </p>
                 </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                <CardContent className="p-8 bg-white">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Email Address</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -70,36 +93,44 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
+                                className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Password</Label>
                             <Input
                                 id="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl"
                             />
                         </div>
                         {error && (
-                            <Alert variant="destructive">
-                                <AlertDescription>{error}</AlertDescription>
+                            <Alert variant="destructive" className="rounded-xl">
+                                <AlertDescription className="text-xs font-bold">{error}</AlertDescription>
                             </Alert>
                         )}
-                        <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 font-bold" disabled={loading}>
+                        <Button type="submit" className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg transition-all hover:shadow-lg active:scale-[0.98] rounded-xl" disabled={loading}>
                             {loading ? (
                                 <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Logging in...
+                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                    Verifying...
                                 </>
                             ) : (
-                                "Sign In"
+                                "LOGIN TO DASHBOARD"
                             )}
                         </Button>
                     </form>
                 </CardContent>
             </Card>
+
+            <div className="mt-8 text-[10px] items-center flex space-x-2 text-gray-400 font-bold uppercase tracking-widest">
+                <span>Public Portal</span>
+                <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                <Link href="/register" className="text-indigo-600 hover:underline">Register Participant</Link>
+            </div>
         </div>
     );
 }

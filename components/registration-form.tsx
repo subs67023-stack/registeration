@@ -13,7 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, CheckCircle2, FileDown } from "lucide-react";
+import { Loader2, CheckCircle2, FileDown, RefreshCw, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
 const registrationSchema = z.object({
     name: z.string().min(2, "Name is required"),
@@ -77,133 +78,181 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
 
     if (success) {
         return (
-            <div className="max-w-md mx-auto mt-10">
-                <Alert className="border-green-500 bg-green-50">
-                    <CheckCircle2 className="h-5 w-5 text-green-600 mb-2" />
-                    <AlertTitle className="text-green-800 font-bold text-xl">Registration Successful!</AlertTitle>
-                    <AlertDescription className="text-green-700 mt-2">
-                        <p className="mb-4">Participant has been registered successfully.</p>
-                        <div className="bg-white p-4 rounded border border-green-200 mb-6">
-                            <p className="text-xs uppercase text-green-600 font-bold tracking-widest mb-1">Registration Number</p>
-                            <p className="text-3xl font-black font-mono text-green-900 leading-none">{success.registrationNumber}</p>
+            <div className="max-w-md mx-auto mt-6 px-4">
+                <Alert className="border-green-500 bg-green-50/50 shadow-xl overflow-hidden pb-0 pt-8 px-0">
+                    <div className="px-6 pb-6">
+                        <div className="flex justify-center mb-6">
+                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                                <CheckCircle2 className="h-10 w-10 text-green-600" />
+                            </div>
                         </div>
+                        <AlertTitle className="text-green-800 font-black text-2xl text-center mb-2">Done!</AlertTitle>
+                        <AlertDescription className="text-green-700 text-center space-y-4">
+                            <p className="text-sm font-medium opacity-80">Your registration is complete. Download your receipt below.</p>
+                            <div className="bg-white p-6 rounded-2xl border-2 border-green-100 shadow-inner">
+                                <p className="text-[10px] uppercase text-green-600 font-black tracking-[0.2em] mb-2">Registration ID</p>
+                                <p className="text-3xl font-black font-mono text-green-900 tracking-tighter">{success.registrationNumber}</p>
+                            </div>
 
-                        <div className="space-y-3">
-                            <Button onClick={() => generateRegistrationPDF(success)} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12">
-                                <FileDown className="mr-2 h-5 w-5" />
-                                Download PDF Receipt
-                            </Button>
-                            <Button onClick={() => setSuccess(null)} variant="outline" className="w-full border-green-300 text-green-700 hover:bg-green-100">
-                                Register Another Participant
-                            </Button>
-                        </div>
-                    </AlertDescription>
+                            <div className="flex flex-col space-y-3 pt-4">
+                                <Button onClick={() => generateRegistrationPDF(success)} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-14 rounded-xl shadow-lg shadow-green-100 transition-all active:scale-[0.98]">
+                                    <FileDown className="mr-2 h-5 w-5" />
+                                    Download Receipt
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        const message = `*Registration Confirmation*%0A%0AHello ${success.name},%0AYour registration for the Rotaract Event is successful!%0A%0A*Reg No:* ${success.registrationNumber}%0A*Category:* ${success.ageGroup}%0A*Fee:* ₹${success.fees}%0A%0AThank you!`;
+                                        window.open(`https://wa.me/91${success.phone}?text=${message}`, '_blank');
+                                    }}
+                                    className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-14 rounded-xl shadow-lg shadow-green-100 transition-all active:scale-[0.98]"
+                                >
+                                    <MessageCircle className="mr-2 h-5 w-5" />
+                                    Send to WhatsApp
+                                </Button>
+                                <Button onClick={() => setSuccess(null)} variant="ghost" className="w-full text-green-700 font-semibold hover:bg-green-100 transition-all h-12">
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    Register Another
+                                </Button>
+                            </div>
+                        </AlertDescription>
+                    </div>
+                    <div className="bg-green-600 h-2 w-full mt-4" />
                 </Alert>
             </div>
         );
     }
 
     return (
-        <Card className="max-w-2xl mx-auto my-10 shadow-xl border-t-4 border-t-indigo-600 overflow-hidden">
-            <div className="bg-indigo-600 p-6 text-white text-center">
-                <CardTitle className="text-2xl font-bold">Registration Details</CardTitle>
-                <p className="text-indigo-100 mt-1">Please enter participant information accurately</p>
+        <Card className="max-w-2xl mx-auto shadow-2xl border-none overflow-hidden rounded-[2rem]">
+            <div className="bg-rotaract-red p-8 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-rotaract-gold rounded-full -mr-10 -mt-10 opacity-30" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-rotaract-blue rounded-full -ml-8 -mb-8 opacity-20" />
+
+                <div className="relative z-10 flex flex-col items-center sm:items-start">
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2 mb-4 shadow-xl border border-white/30">
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            width={50}
+                            height={50}
+                            className="object-contain"
+                            onError={(e) => {
+                                (e.target as any).style.display = 'none';
+                                const parent = (e.target as any).parentElement;
+                                if (parent) parent.innerHTML = '<span class="text-rotaract-red font-black text-2xl">R</span>';
+                            }}
+                        />
+                    </div>
+                    <CardTitle className="text-3xl md:text-4xl font-black tracking-tighter">Event Registration</CardTitle>
+                    <p className="text-white mt-1 font-medium text-sm opacity-80">Rotaract Club Participant Enrollment</p>
+                </div>
             </div>
-            <CardContent className="p-8">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name" className="text-indigo-900 font-semibold">Full Name</Label>
-                            <Input id="name" {...register("name")} placeholder="Enter name" className="border-indigo-100 focus:border-indigo-300" />
-                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
-                        </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="dob" className="text-indigo-900 font-semibold">Date of Birth</Label>
-                            <Input id="dob" type="date" {...register("dob")} className="border-indigo-100" />
-                            {errors.dob && <p className="text-red-500 text-xs mt-1">{errors.dob.message}</p>}
-                        </div>
+            <CardContent className="p-6 md:p-10 bg-white">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="space-y-6">
+                        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Personal Details</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Full Name</Label>
+                                <Input id="name" {...register("name")} placeholder="As per documents" className="h-12 border-gray-100 bg-gray-50 focus:bg-white transition-all rounded-xl" />
+                                {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name.message}</p>}
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="gender" className="text-indigo-900 font-semibold">Gender</Label>
-                            <Select onValueChange={(val) => setValue("gender", val as "M" | "F")} defaultValue="M">
-                                <SelectTrigger className="border-indigo-100">
-                                    <SelectValue placeholder="Select Gender" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="M">Male</SelectItem>
-                                    <SelectItem value="F">Female</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="dob" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Date of Birth</Label>
+                                <Input id="dob" type="date" {...register("dob")} className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                {errors.dob && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.dob.message}</p>}
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="aadharNo" className="text-indigo-900 font-semibold">Aadhar Number (12 digits)</Label>
-                            <Input id="aadharNo" {...register("aadharNo")} placeholder="12 digit aadhar" maxLength={12} className="border-indigo-100" />
-                            {errors.aadharNo && <p className="text-red-500 text-xs mt-1">{errors.aadharNo.message}</p>}
-                        </div>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="gender" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Gender</Label>
+                                <Select onValueChange={(val) => setValue("gender", val as "M" | "F")} defaultValue="M">
+                                    <SelectTrigger className="h-12 border-gray-100 bg-gray-50 rounded-xl">
+                                        <SelectValue placeholder="Select Gender" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="M">Male</SelectItem>
+                                        <SelectItem value="F">Female</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="phone" className="text-indigo-900 font-semibold">Phone Number (10 digits)</Label>
-                            <Input id="phone" {...register("phone")} placeholder="10 digit phone" maxLength={10} className="border-indigo-100" />
-                            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="schoolCollege" className="text-indigo-900 font-semibold">School / College</Label>
-                            <Input id="schoolCollege" {...register("schoolCollege")} placeholder="School name" className="border-indigo-100" />
-                            {errors.schoolCollege && <p className="text-red-500 text-xs mt-1">{errors.schoolCollege.message}</p>}
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="village" className="text-indigo-900 font-semibold">Village Name</Label>
-                            <Input id="village" {...register("village")} placeholder="Village name" className="border-indigo-100" />
-                            {errors.village && <p className="text-red-500 text-xs mt-1">{errors.village.message}</p>}
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="paymentMethod" className="text-indigo-900 font-semibold">Payment Method</Label>
-                            <Select onValueChange={(val) => setValue("paymentMethod", val as "CASH" | "ONLINE")} defaultValue="CASH">
-                                <SelectTrigger className="border-indigo-100">
-                                    <SelectValue placeholder="Select Method" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="CASH">CASH</SelectItem>
-                                    <SelectItem value="ONLINE">ONLINE</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="aadharNo" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Aadhar Number</Label>
+                                <Input id="aadharNo" {...register("aadharNo")} placeholder="12-digit number" maxLength={12} className="h-12 border-gray-100 bg-gray-50 rounded-xl font-mono tracking-widest" />
+                                {errors.aadharNo && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.aadharNo.message}</p>}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="bg-indigo-50 p-5 rounded-xl flex flex-wrap justify-between items-center text-indigo-900 border border-indigo-200">
-                        <div>
-                            <p className="font-semibold text-xs uppercase tracking-wider opacity-70 mb-1">Calculated Age</p>
-                            <p className="text-2xl font-black">{ageInfo.age || 0}</p>
+                    <div className="space-y-6">
+                        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Contact & Institution</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="phone" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Phone Number</Label>
+                                <Input id="phone" {...register("phone")} placeholder="10-digit mobile" maxLength={10} className="h-12 border-gray-100 bg-gray-50 rounded-xl font-mono" />
+                                {errors.phone && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.phone.message}</p>}
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="schoolCollege" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">School / College</Label>
+                                <Input id="schoolCollege" {...register("schoolCollege")} placeholder="Current institution" className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                {errors.schoolCollege && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.schoolCollege.message}</p>}
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="village" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Village Name</Label>
+                                <Input id="village" {...register("village")} placeholder="Home village" className="h-12 border-gray-100 bg-gray-50 rounded-xl" />
+                                {errors.village && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.village.message}</p>}
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="paymentMethod" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Payment Method</Label>
+                                <Select onValueChange={(val) => setValue("paymentMethod", val as "CASH" | "ONLINE")} defaultValue="CASH">
+                                    <SelectTrigger className="h-12 border-gray-100 bg-gray-50 rounded-xl">
+                                        <SelectValue placeholder="Select Method" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="CASH">CASH (At Venue)</SelectItem>
+                                        <SelectItem value="ONLINE">ONLINE (Scan & Pay)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-semibold text-xs uppercase tracking-wider opacity-70 mb-1">Age Group</p>
-                            <p className="text-2xl font-black">{ageInfo.ageGroup}</p>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-red-50 to-orange-50 p-6 rounded-3xl border border-red-100 flex flex-row flex-wrap justify-between items-center shadow-inner gap-4">
+                        <div className="space-y-1">
+                            <p className="font-black text-[10px] uppercase tracking-[0.2em] text-rotaract-red/60">Current Age</p>
+                            <p className="text-3xl font-black text-rotaract-red">{ageInfo.age || 0}</p>
                         </div>
-                        <div className="text-right">
-                            <p className="font-semibold text-xs uppercase tracking-wider opacity-70 mb-1">Fee Amount</p>
-                            <p className="text-3xl font-black text-indigo-600">₹{ageInfo.fee}</p>
+                        <div className="space-y-1">
+                            <p className="font-black text-[10px] uppercase tracking-[0.2em] text-rotaract-red/60">Age Category</p>
+                            <div className="bg-white px-3 py-1 rounded-full border border-red-100 inline-block shadow-sm">
+                                <p className="text-sm font-black text-rotaract-red">{ageInfo.ageGroup}</p>
+                            </div>
+                        </div>
+                        <div className="text-right space-y-1 bg-rotaract-red px-6 py-2 rounded-2xl shadow-lg border-b-4 border-red-800">
+                            <p className="font-black text-[10px] uppercase tracking-[0.2em] text-rotaract-gold opacity-80">Registration Fee</p>
+                            <p className="text-3xl font-black text-white">₹{ageInfo.fee}</p>
                         </div>
                     </div>
 
                     {error && (
-                        <Alert variant="destructive">
-                            <AlertDescription>{error}</AlertDescription>
+                        <Alert variant="destructive" className="rounded-2xl">
+                            <AlertDescription className="font-bold">{error}</AlertDescription>
                         </Alert>
                     )}
 
-                    <Button type="submit" className="w-full h-14 text-xl font-black bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-1" disabled={loading}>
+                    <Button type="submit" className="w-full h-16 text-xl font-black bg-rotaract-red hover:bg-red-700 text-white shadow-xl shadow-red-100 transition-all hover:-translate-y-1 active:scale-[0.98] rounded-2xl" disabled={loading}>
                         {loading ? (
                             <>
                                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                                Registering...
+                                Confirming...
                             </>
                         ) : (
-                            "Complete Registration"
+                            "REGISTER NOW"
                         )}
                     </Button>
                 </form>
