@@ -18,11 +18,11 @@ export async function GET(req: NextRequest) {
         const buffers: any[] = [];
         doc.on("data", buffers.push.bind(buffers));
 
-        return new Promise((resolve) => {
+        return new Promise<Response>((resolve) => {
             doc.on("end", () => {
                 const pdfData = Buffer.concat(buffers);
                 resolve(
-                    new NextResponse(pdfData, {
+                    new Response(pdfData, {
                         headers: {
                             "Content-Type": "application/pdf",
                             "Content-Disposition": `attachment; filename=report-${type || "all"}.pdf`,
