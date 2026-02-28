@@ -68,6 +68,6 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || "rotaract_registration_secret_key_fixed_2024",
     debug: process.env.NODE_ENV === "development",
 };
