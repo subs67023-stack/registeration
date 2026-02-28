@@ -72,6 +72,7 @@ export default function LoginPage() {
                     </p>
                 </CardHeader>
                 <CardContent className="p-8 bg-white">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-black ml-1">Email Address</Label>
@@ -123,6 +124,6 @@ export default function LoginPage() {
                 <span className="w-1 h-1 bg-gray-300 rounded-full" />
                 <Link href="/register" className="text-indigo-600 hover:underline">Register Participant</Link>
             </div>
-        </div >
+        </div>
     );
 }
