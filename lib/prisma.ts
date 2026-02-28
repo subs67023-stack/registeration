@@ -15,18 +15,20 @@ if (process.env.NODE_ENV !== "production") {
   // Auto-seed admin in production if not exists
   (async () => {
     try {
-      const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
-      if (adminCount === 0) {
+      const targetEmail = "wagawadeabhinav1@gmail.com";
+      const admin = await prisma.user.findUnique({ where: { email: targetEmail } });
+
+      if (!admin) {
         const hashedPassword = await bcrypt.hash("7588262158", 10);
         await prisma.user.create({
           data: {
-            email: "kagawadeabhinav1@gmail.com",
+            email: targetEmail,
             name: "Main Admin",
             password: hashedPassword,
             role: "ADMIN",
           },
         });
-        console.log("Admin auto-seeded");
+        console.log("Admin auto-seeded:", targetEmail);
       }
     } catch (e) {
       console.error("Auto-seed error:", e);
