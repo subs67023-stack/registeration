@@ -9,6 +9,7 @@ import {
     Users,
     LogOut,
     ClipboardList,
+    BarChart3,
     Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ export default function Sidebar({ user, mobile = false }: { user: any; mobile?: 
 
     const adminLinks = [
         { name: "Overview", href: "/admin", icon: LayoutDashboard },
+        { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
         { name: "Registrations", href: "/admin/registrations", icon: ClipboardList },
         { name: "Manage Subadmins", href: "/admin/users", icon: Users },
     ];
@@ -40,7 +42,7 @@ export default function Sidebar({ user, mobile = false }: { user: any; mobile?: 
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-rotaract-gold">
                     {/* Logo placeholder - User should upload to /public/logo.png */}
                     <Image
-                        src="/logo.png"
+                        src="/logo-new.jpg"
                         alt="Logo"
                         width={40}
                         height={40}

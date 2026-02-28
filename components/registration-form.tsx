@@ -203,7 +203,7 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                                         <SelectValue placeholder="Select Method" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="CASH">CASH (At Venue)</SelectItem>
+                                        <SelectItem value="CASH">CASH</SelectItem>
                                         <SelectItem value="ONLINE">ONLINE (Scan & Pay)</SelectItem>
                                     </SelectContent>
                                 </Select>
