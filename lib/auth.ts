@@ -3,6 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+if (!process.env.NEXTAUTH_SECRET) {
+    console.warn("⚠️ NEXTAUTH_SECRET is missing. Authentication will fail in production.");
+}
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
