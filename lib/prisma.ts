@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
@@ -8,4 +9,27 @@ export const prisma =
     log: ["query"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+} else {
+  // Auto-seed admin in production if not exists
+  (async () => {
+    try {
+      const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
+      if (adminCount === 0) {
+        const hashedPassword = await bcrypt.hash("adminpassword123", 10);
+        await prisma.user.create({
+          data: {
+            email: "admin@example.com",
+            name: "Main Admin",
+            password: hashedPassword,
+            role: "ADMIN",
+          },
+        });
+        console.log("Admin auto-seeded");
+      }
+    } catch (e) {
+      console.error("Auto-seed error:", e);
+    }
+  })();
+}
