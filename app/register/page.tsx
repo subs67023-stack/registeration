@@ -1,5 +1,5 @@
 import RegistrationForm from "@/components/registration-form";
-import Image from "next/image";
+import Logo from "@/components/logo";
 
 export default function RegisterPage() {
     return (
@@ -8,18 +8,7 @@ export default function RegisterPage() {
             <header className="bg-white border-b py-4 px-6 flex items-center justify-between sticky top-0 z-10 shadow-sm">
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden border border-indigo-200">
-                        <Image
-                            src="/logo.png"
-                            alt="Logo"
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                            onError={(e) => {
-                                (e.target as any).style.display = 'none';
-                                const parent = (e.target as any).parentElement;
-                                if (parent) parent.innerHTML = '<span class="text-indigo-900 font-bold text-lg">R</span>';
-                            }}
-                        />
+                        <Logo width={40} height={40} />
                     </div>
                     <span className="font-black text-2xl text-indigo-900 tracking-tighter">Rotaract</span>
                 </div>

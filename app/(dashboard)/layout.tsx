@@ -5,7 +5,7 @@ import Sidebar from "@/components/dashboard/sidebar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import Image from "next/image";
+import Logo from "@/components/logo";
 
 export default async function DashboardLayout({
     children,
@@ -27,18 +27,7 @@ export default async function DashboardLayout({
             <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-indigo-900 text-white sticky top-0 z-40 shadow-md">
                 <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center overflow-hidden border border-indigo-300">
-                        <Image
-                            src="/logo.png"
-                            alt="Logo"
-                            width={32}
-                            height={32}
-                            className="object-contain"
-                            onError={(e) => {
-                                (e.target as any).style.display = 'none';
-                                const parent = (e.target as any).parentElement;
-                                if (parent) parent.innerHTML = '<span class="text-indigo-900 font-bold text-sm">R</span>';
-                            }}
-                        />
+                        <Logo width={32} height={32} textClassName="text-indigo-900 font-bold text-sm" />
                     </div>
                     <span className="font-bold text-lg tracking-tight">Rotaract</span>
                 </div>
