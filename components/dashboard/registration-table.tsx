@@ -183,6 +183,7 @@ export default function RegistrationTable({
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">Age (Group)</TableHead>
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">Phone</TableHead>
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">Fee</TableHead>
+                                        <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">By Admin</TableHead>
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">Method</TableHead>
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400">Date</TableHead>
                                         <TableHead className="font-black uppercase text-[10px] tracking-widest text-gray-400 px-6 text-right">Actions</TableHead>
@@ -206,6 +207,7 @@ export default function RegistrationTable({
                                                 </TableCell>
                                                 <TableCell className="font-medium text-gray-600 font-mono text-xs">{item.phone}</TableCell>
                                                 <TableCell className="font-black text-rotaract-red">₹{item.fees}</TableCell>
+                                                <TableCell className="font-bold text-[10px] uppercase text-gray-500">{item.subadmin?.name || "Main Admin"}</TableCell>
                                                 <TableCell>
                                                     <span className={`px-2 py-1 rounded-full text-[10px] font-black tracking-widest border ${item.paymentMethod === "ONLINE" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-orange-50 text-orange-700 border-orange-100"
                                                         }`}>

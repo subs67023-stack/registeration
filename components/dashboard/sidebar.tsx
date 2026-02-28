@@ -25,6 +25,7 @@ export default function Sidebar({ user, mobile = false }: { user: any; mobile?: 
     const adminLinks = [
         { name: "Overview", href: "/admin", icon: LayoutDashboard },
         { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+        { name: "New Registration", href: "/admin/new", icon: UserPlus },
         { name: "Registrations", href: "/admin/registrations", icon: ClipboardList },
         { name: "Manage Subadmins", href: "/admin/users", icon: Users },
     ];

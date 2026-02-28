@@ -143,21 +143,21 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Personal Details</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
                             <div className="space-y-1.5">
-                                <Label htmlFor="name" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Full Name</Label>
-                                <Input id="name" {...register("name")} placeholder="As per documents" className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl text-indigo-950" />
+                                <Label htmlFor="name" className="text-xs font-black text-black uppercase tracking-wider ml-1">Full Name</Label>
+                                <Input id="name" {...register("name")} placeholder="Full Name" spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base" />
                                 {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="dob" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Date of Birth</Label>
-                                <Input id="dob" type="date" {...register("dob")} className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl text-indigo-950" />
+                                <Label htmlFor="dob" className="text-xs font-black text-black uppercase tracking-wider ml-1">Date of Birth</Label>
+                                <Input id="dob" type="date" {...register("dob")} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base" />
                                 {errors.dob && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.dob.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="gender" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Gender</Label>
+                                <Label htmlFor="gender" className="text-xs font-black text-black uppercase tracking-wider ml-1">Gender</Label>
                                 <Select onValueChange={(val) => setValue("gender", val as "M" | "F")} defaultValue="M">
-                                    <SelectTrigger className="h-12 border-indigo-200 bg-white shadow-sm focus:ring-indigo-500 rounded-xl text-indigo-950">
+                                    <SelectTrigger className="h-14 border-2 border-black bg-white shadow-sm focus:ring-indigo-600 rounded-xl text-black font-bold text-base">
                                         <SelectValue placeholder="Select Gender" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -168,8 +168,8 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="aadharNo" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Aadhar Number</Label>
-                                <Input id="aadharNo" {...register("aadharNo")} placeholder="12-digit number" maxLength={12} className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl font-mono tracking-widest text-indigo-950" />
+                                <Label htmlFor="aadharNo" className="text-xs font-black text-black uppercase tracking-wider ml-1">Aadhar Number</Label>
+                                <Input id="aadharNo" {...register("aadharNo")} placeholder="12-digit number" maxLength={12} spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl font-mono tracking-[0.3em] text-black font-bold text-base" />
                                 {errors.aadharNo && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.aadharNo.message}</p>}
                             </div>
                         </div>
@@ -179,8 +179,8 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-rotaract-red border-b pb-2">Contact & Institution</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
                             <div className="space-y-1.5">
-                                <Label htmlFor="phone" className="text-xs font-black text-indigo-950 uppercase tracking-wider ml-1">Phone Number</Label>
-                                <Input id="phone" {...register("phone")} placeholder="10-digit mobile" maxLength={10} className="h-12 border-indigo-200 bg-white shadow-sm focus:border-indigo-500 transition-all rounded-xl font-mono text-indigo-950" />
+                                <Label htmlFor="phone" className="text-xs font-black text-black uppercase tracking-wider ml-1">Phone Number</Label>
+                                <Input id="phone" {...register("phone")} placeholder="10-digit mobile" maxLength={10} spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl font-mono text-black font-bold text-base" />
                                 {errors.phone && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.phone.message}</p>}
                             </div>
 
