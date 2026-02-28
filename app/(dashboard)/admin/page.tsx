@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import DashboardHeader from "@/components/dashboard/header";
 import StatsCards from "@/components/dashboard/stats-cards";
 import RegistrationTable from "@/components/dashboard/registration-table";
+import AnalyticsCharts from "@/components/dashboard/analytics-charts";
 
 export default async function AdminDashboard() {
     const registrations = await prisma.registration.findMany({
@@ -28,6 +29,8 @@ export default async function AdminDashboard() {
             <DashboardHeader title="Admin Overview" />
 
             <StatsCards total={stats.total} amount={stats.amount} />
+
+            <AnalyticsCharts data={registrations} />
 
             <RegistrationTable
                 title="All Registrations"

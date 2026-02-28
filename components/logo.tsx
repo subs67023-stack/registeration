@@ -26,7 +26,7 @@ export default function Logo({ width, height, className = "object-contain", text
 
     return (
         <Image
-            src="/logo.png"
+            src="/logo-new.jpg"
             alt="Logo"
             width={width}
             height={height}

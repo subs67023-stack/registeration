@@ -5,6 +5,7 @@ import { generateReportPDF } from "@/lib/pdf-utils";
 import DashboardHeader from "@/components/dashboard/header";
 import StatsCards from "@/components/dashboard/stats-cards";
 import RegistrationTable from "@/components/dashboard/registration-table";
+import AnalyticsCharts from "@/components/dashboard/analytics-charts";
 
 export default async function SubadminDashboard() {
     const session = await getServerSession(authOptions);
@@ -32,6 +33,8 @@ export default async function SubadminDashboard() {
             <DashboardHeader title="Subadmin Dashboard" />
 
             <StatsCards total={stats.total} amount={stats.amount} />
+
+            <AnalyticsCharts data={registrations} />
 
             <RegistrationTable
                 title="My Registrations"
