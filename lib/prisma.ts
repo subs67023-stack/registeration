@@ -17,10 +17,10 @@ if (process.env.NODE_ENV !== "production") {
     try {
       const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
       if (adminCount === 0) {
-        const hashedPassword = await bcrypt.hash("adminpassword123", 10);
+        const hashedPassword = await bcrypt.hash("7588262158", 10);
         await prisma.user.create({
           data: {
-            email: "admin@example.com",
+            email: "kagawadeabhinav1@gmail.com",
             name: "Main Admin",
             password: hashedPassword,
             role: "ADMIN",

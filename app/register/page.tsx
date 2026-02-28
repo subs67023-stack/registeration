@@ -1,7 +1,16 @@
 import RegistrationForm from "@/components/registration-form";
 import Logo from "@/components/logo";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        redirect("/login");
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* Mini Header for mobile/desktop */}
