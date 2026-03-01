@@ -29,6 +29,7 @@ export const generateRegistrationPDF = (registration: any) => {
             ["Age", registration.age.toString()],
             ["Age Group", registration.ageGroup],
             ["Gender", registration.gender],
+            ["Kit Size", registration.kitSize || "N/A"],
             ["Aadhar No", registration.aadharNo],
             ["Phone", registration.phone],
             ["School/College", registration.schoolCollege],

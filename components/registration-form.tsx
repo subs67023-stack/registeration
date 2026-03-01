@@ -20,6 +20,7 @@ const registrationSchema = z.object({
     name: z.string().min(2, "Name is required"),
     dob: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date of birth"),
     gender: z.enum(["M", "F"]),
+    kitSize: z.string().min(1, "Kit Size is required"),
     aadharNo: z.string().length(12, "Aadhar Number must be exactly 12 digits").regex(/^\d+$/, "Aadhar must be numeric"),
     schoolCollege: z.string().min(2, "School/College name is required"),
     village: z.string().min(2, "Village name is required"),
@@ -165,6 +166,12 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                                         <SelectItem value="F">Female</SelectItem>
                                     </SelectContent>
                                 </Select>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label htmlFor="kitSize" className="text-xs font-black text-black uppercase tracking-wider ml-1">Kit Size</Label>
+                                <Input id="kitSize" {...register("kitSize")} placeholder="e.g. 38, 40, S, M" spellCheck={false} className="h-14 border-2 border-black bg-white shadow-sm focus:border-indigo-600 transition-all rounded-xl text-black font-bold text-base" />
+                                {errors.kitSize && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.kitSize.message}</p>}
                             </div>
 
                             <div className="space-y-1.5">
