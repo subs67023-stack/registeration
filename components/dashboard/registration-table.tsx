@@ -58,7 +58,7 @@ export default function RegistrationTable({
     };
 
     const handleWhatsApp = (item: any) => {
-        const message = `*Registration Confirmation*%0A%0AHello ${item.name},%0AYour registration for the Rotaract Event is successful!%0A%0A*Reg No:* ${item.registrationNumber}%0A*Category:* ${item.ageGroup}%0A*Fee:* ₹${item.fees}%0A%0AThank you!`;
+        const message = `नमस्कार,%0A%0A——/${item.name}/——%0Aआपण Marathon स्पर्धेसाठी Registration केले आहे.%0A %0A📅 तारीख: 29 March 2026%0A📍 ठिकाण: Pattankodoli%0A⏰ Reporting Time: स. 6 वाजता %0A%0AReg No- ${item.registrationNumber}%0AName- ${item.name}   %0ACategory- ${item.ageGroup}%0AKit Size- ${item.kitSize || 'N/A'} %0AFees- ₹${item.fees}     %0A %0Aनियम व अटी %0A1. स्पर्धेत सहभागी होण्यासाठी नोंदणी करणे आवश्यक आहे.%0A2. स्पर्धकांनी वेळेवर स्पर्धेच्या ठिकाणी उपस्थित राहणे बंधनकारक आहे.%0A3. स्पर्धकांनी स्पर्धेदरम्यान आयोजकांनी दिलेला बिब नंबर / आयडी लावणे आवश्यक आहे.%0A4. स्पर्धेदरम्यान कोणत्याही प्रकारची फसवणूक किंवा शॉर्टकट वापरल्यास स्पर्धक अपात्र ठरवला जाईल.%0A5. 18 वर्षांखालील स्पर्धकांसाठी पालकांची परवानगी आवश्यक आहे.%0A6. स्पर्धकांनी स्वतःच्या आरोग्याची जबाबदारी स्वतः घ्यावी.%0A7. आयोजक समितीचा निर्णय अंतिम व सर्वांसाठी बंधनकारक राहील.%0A8. स्पर्धेच्या दरम्यान सुरक्षिततेचे सर्व नियम पाळणे आवश्यक आहे.%0A9. स्पर्धा मार्गावर कचरा टाकू नये व स्वच्छता राखावी.%0A10. स्पर्धेतील विजेत्यांना आयोजकांच्या वतीने पारितोषिक देण्यात येईल.%0A%0A%0Aधन्यवाद 🙏%0ARotaract Club Pattankodoli`;
         window.open(`https://wa.me/91${item.phone}?text=${message}`, '_blank');
     };
 
@@ -100,8 +100,8 @@ export default function RegistrationTable({
                             <TabsTrigger value="All" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white min-w-[60px]">All</TabsTrigger>
                             {filterMode === "category" ? (
                                 <>
-                                    <TabsTrigger value="0-12" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">0–12</TabsTrigger>
-                                    <TabsTrigger value="13-16" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">13–16</TabsTrigger>
+                                    <TabsTrigger value="6-12" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">6–12</TabsTrigger>
+                                    <TabsTrigger value="13-17" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">13–17</TabsTrigger>
                                     <TabsTrigger value="Open" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">Open</TabsTrigger>
                                 </>
                             ) : (

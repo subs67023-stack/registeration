@@ -9,9 +9,9 @@ export default async function AdminRegistrations() {
     });
 
     const groups = {
-        "0-12": registrations.filter(r => r.ageGroup === "0-12"),
-        "13-16": registrations.filter(r => r.ageGroup === "13-16"),
-        "Open": registrations.filter(r => r.ageGroup === "Open"),
+        "6-12": registrations.filter((r: any) => r.ageGroup === "6-12"),
+        "13-17": registrations.filter((r: any) => r.ageGroup === "13-17"),
+        "Open": registrations.filter((r: any) => r.ageGroup === "Open"),
         "All": registrations
     };
 

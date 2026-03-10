@@ -22,7 +22,27 @@ export async function registerParticipant(formData: any) {
 
         const age = calculateAge(new Date(dob));
         const { ageGroup, fee } = getAgeGroupAndFee(age);
-        const registrationNumber = generateRegistrationNumber();
+
+        // Sequential Registration Number REG0001 to REG9999
+        const lastRegistration = await prisma.registration.findFirst({
+            orderBy: { registrationNumber: 'desc' },
+            where: {
+                registrationNumber: {
+                    startsWith: 'REG',
+                },
+            },
+        });
+
+        let nextNumber = 1;
+        if (lastRegistration) {
+            const lastNumStr = lastRegistration.registrationNumber.replace('REG', '');
+            const lastNum = parseInt(lastNumStr, 10);
+            if (!isNaN(lastNum)) {
+                nextNumber = lastNum + 1;
+            }
+        }
+
+        const registrationNumber = `REG${nextNumber.toString().padStart(4, '0')}`;
 
         const registration = await prisma.registration.create({
             data: {

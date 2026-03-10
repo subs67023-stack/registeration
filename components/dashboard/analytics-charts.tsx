@@ -9,7 +9,7 @@ interface AnalyticsProps {
 
 export default function AnalyticsCharts({ data }: AnalyticsProps) {
     // 1. Process Data for Age Groups
-    const ageGroups = ["0-12", "13-16", "Open"];
+    const ageGroups = ["6-12", "13-17", "Open"];
     const ageData = ageGroups.map(group => {
         const filtered = data.filter(r => r.ageGroup === group);
         const count = filtered.length;
@@ -20,14 +20,23 @@ export default function AnalyticsCharts({ data }: AnalyticsProps) {
     const maxCount = Math.max(...ageData.map(d => d.count), 1);
     const totalAmount = data.reduce((sum, r) => sum + (r.fees || 0), 0);
 
-    // 2. Process Data for Gender
-    const genderGroups = ["Male", "Female", "Other"];
+    // 2. Process Data for Kit Sizes
+    const kitSizes = Array.from(new Set(data.map(r => r.kitSize).filter(Boolean))) as string[];
+    const kitData = kitSizes.map(size => ({
+        name: size,
+        count: data.filter(r => r.kitSize === size).length
+    })).sort((a, b) => b.count - a.count);
+
+    const maxKitCount = Math.max(...kitData.map(d => d.count), 1);
+
+    // 3. Process Data for Gender
+    const genderGroups = ["M", "F"];
     const genderData = genderGroups.map(g => ({
-        name: g,
+        name: g === "M" ? "Male" : "Female",
         count: data.filter(r => r.gender === g).length
     })).filter(d => d.count > 0);
 
-    // 3. Process Data for Trend (Last 7 Days)
+    // 4. Process Data for Trend (Last 7 Days)
     const last7Days = Array.from({ length: 7 }, (_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - (6 - i));
@@ -81,6 +90,49 @@ export default function AnalyticsCharts({ data }: AnalyticsProps) {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Kit Size Analysis */}
+            <Card className="border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white">
+                <CardHeader className="p-8 pb-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="text-2xl font-black text-indigo-950 tracking-tight">Kit Size Analysis</CardTitle>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Inventory Requirement</p>
+                        </div>
+                        <Users className="h-6 w-6 text-indigo-200" />
+                    </div>
+                </CardHeader>
+                <CardContent className="p-8 pt-0">
+                    <div className="space-y-4">
+                        {kitData.length === 0 ? (
+                            <p className="text-gray-400 font-bold italic text-center py-10">No kit size data available.</p>
+                        ) : (
+                            kitData.map((kit, i) => (
+                                <div key={kit.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-black">
+                                            {kit.name.toString().substring(0, 2)}
+                                        </div>
+                                        <div>
+                                            <p className="font-black text-indigo-950">Size: {kit.name}</p>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase">Required Quantity</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-2xl font-black text-indigo-600">{kit.count}</p>
+                                        <div className="h-1.5 w-24 bg-indigo-100 rounded-full mt-1 overflow-hidden">
+                                            <div
+                                                className="h-full bg-indigo-600"
+                                                style={{ width: `${(kit.count / maxKitCount) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </CardContent>
             </Card>

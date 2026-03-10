@@ -65,6 +65,7 @@ export const generateReportPDF = (title: string, data: any[], totals: { count: n
         item.registrationNumber,
         item.name,
         item.ageGroup,
+        item.kitSize || "N/A",
         item.phone,
         item.fees,
         item.paymentMethod,
@@ -73,12 +74,12 @@ export const generateReportPDF = (title: string, data: any[], totals: { count: n
 
     autoTable(doc, {
         startY: 30,
-        head: [["S.No", "Reg No", "Name", "Group", "Phone", "Fee", "Method", "SubAdmin"]],
+        head: [["S.No", "Reg No", "Name", "Group", "Kit", "Phone", "Fee", "Method", "SubAdmin"]],
         body: body,
-        foot: [["", "TOTAL", "", "", "", `Rs. ${totals.amount}`, "", ""]],
+        foot: [["", "TOTAL", "", "", "", "", `Rs. ${totals.amount}`, "", ""]],
         theme: "grid",
         headStyles: { fillColor: [63, 81, 181] },
-        styles: { fontSize: 8 }
+        styles: { fontSize: 7 }
     });
 
     doc.save(`${title.toLowerCase().replace(/\s+/g, "-")}.pdf`);
