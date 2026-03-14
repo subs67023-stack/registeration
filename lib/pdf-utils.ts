@@ -48,7 +48,15 @@ export const generateRegistrationPDF = (registration: any) => {
     doc.text("Authorized Signature", 150, finalY);
     doc.line(140, finalY - 5, 185, finalY - 5);
 
-    doc.save(`receipt-${registration.registrationNumber}.pdf`);
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `receipt-${registration.registrationNumber}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 };
 
 export const generateReportPDF = (title: string, data: any[], totals: { count: number; amount: number }) => {
@@ -83,5 +91,13 @@ export const generateReportPDF = (title: string, data: any[], totals: { count: n
         styles: { fontSize: 6.5 }
     });
 
-    doc.save(`${title.toLowerCase().replace(/\s+/g, "-")}.pdf`);
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${title.toLowerCase().replace(/\s+/g, "-")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 };

@@ -10,7 +10,7 @@ export default async function AdminAnalyticsPage() {
 
     const stats = {
         total: registrations.length,
-        amount: registrations.reduce((acc, curr) => acc + curr.fees, 0)
+        amount: registrations.reduce((acc: number, curr: any) => acc + curr.fees, 0)
     };
 
     return (

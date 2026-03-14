@@ -13,11 +13,11 @@ export function calculateAge(dob: string | Date): number {
 
 export function getAgeGroupAndFee(age: number) {
     if (age >= 6 && age <= 12) {
-        return { ageGroup: "6-12", fee: 200 };
+        return { ageGroup: "6-12", fee: 150 };
     } else if (age >= 13 && age <= 17) {
-        return { ageGroup: "13-17", fee: 250 };
+        return { ageGroup: "13-17", fee: 200 };
     } else if (age >= 18 && age <= 60) {
-        return { ageGroup: "Open", fee: 300 };
+        return { ageGroup: "Open", fee: 250 };
     } else {
         return { ageGroup: "N/A", fee: 0 };
     }

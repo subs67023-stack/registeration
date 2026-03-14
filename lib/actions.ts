@@ -24,22 +24,26 @@ export async function registerParticipant(formData: any) {
         const { ageGroup, fee } = getAgeGroupAndFee(age);
 
         // Sequential Registration Number REG0001 to REG9999
-        const lastRegistration = await prisma.registration.findFirst({
-            orderBy: { registrationNumber: 'desc' },
+        // Fetch registrations to determine the next sequential number.
+        // We filter in memory to ignore old timestamp-based numbers.
+        const recentRegistrations = await prisma.registration.findMany({
             where: {
                 registrationNumber: {
                     startsWith: 'REG',
                 },
             },
+            select: { registrationNumber: true }
         });
 
         let nextNumber = 1;
-        if (lastRegistration) {
-            const lastNumStr = lastRegistration.registrationNumber.replace('REG', '');
-            const lastNum = parseInt(lastNumStr, 10);
-            if (!isNaN(lastNum)) {
-                nextNumber = lastNum + 1;
-            }
+        const validNumbers = recentRegistrations
+            .map((r: { registrationNumber: string }) => r.registrationNumber)
+            .filter((num: string) => num.length <= 8) // Accommodate up to REG99999 just in case
+            .map((num: string) => parseInt(num.replace('REG', ''), 10))
+            .filter((num: number) => !isNaN(num));
+
+        if (validNumbers.length > 0) {
+            nextNumber = Math.max(...validNumbers) + 1;
         }
 
         const registrationNumber = `REG${nextNumber.toString().padStart(4, '0')}`;

@@ -18,13 +18,13 @@ export default async function SubadminDashboard() {
 
     const stats = {
         total: registrations.length,
-        amount: registrations.reduce((acc, curr) => acc + curr.fees, 0)
+        amount: registrations.reduce((acc: number, curr: any) => acc + curr.fees, 0)
     };
 
     const groups = {
-        "0-12": registrations.filter(r => r.ageGroup === "0-12"),
-        "13-16": registrations.filter(r => r.ageGroup === "13-16"),
-        "Open": registrations.filter(r => r.ageGroup === "Open"),
+        "6-12": registrations.filter((r: any) => r.ageGroup === "6-12"),
+        "13-17": registrations.filter((r: any) => r.ageGroup === "13-17"),
+        "Open": registrations.filter((r: any) => r.ageGroup === "Open"),
         "All": registrations
     };
 
