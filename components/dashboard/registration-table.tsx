@@ -12,11 +12,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { FileDown, Trash2, MessageCircle } from "lucide-react";
+import { FileDown, Trash2, MessageCircle, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { generateReportPDF } from "@/lib/pdf-utils";
 import { deleteRegistration } from "@/lib/actions";
 import { useTransition } from "react";
+import EditRegistrationSheet from "./edit-registration-sheet";
 
 export default function RegistrationTable({
     title,
@@ -30,6 +31,7 @@ export default function RegistrationTable({
     const [activeTab, setActiveTab] = useState("All");
     const [filterMode, setFilterMode] = useState<"category" | "subadmin">("category");
     const [isPending, startTransition] = useTransition();
+    const [editingRegistration, setEditingRegistration] = useState<any | null>(null);
 
     // Get unique subadmins from the data
     const subadmins = Array.from(new Set(data.map(item => item.subadmin?.name).filter(Boolean))) as string[];
@@ -159,6 +161,9 @@ export default function RegistrationTable({
                                                 </span>
                                             </div>
                                             <div className="flex items-center space-x-1">
+                                                <Button onClick={() => setEditingRegistration(item)} variant="ghost" size="icon" className="h-8 w-8 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50">
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
                                                 <Button onClick={() => handleWhatsApp(item)} variant="ghost" size="icon" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
                                                     <MessageCircle className="h-4 w-4" />
                                                 </Button>
@@ -219,6 +224,9 @@ export default function RegistrationTable({
                                                 </TableCell>
                                                 <TableCell className="px-6 text-right">
                                                     <div className="flex items-center justify-end space-x-1">
+                                                        <Button onClick={() => setEditingRegistration(item)} variant="ghost" size="icon" className="h-8 w-8 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50">
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
                                                         <Button onClick={() => handleWhatsApp(item)} variant="ghost" size="icon" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
                                                             <MessageCircle className="h-4 w-4" />
                                                         </Button>
@@ -236,6 +244,11 @@ export default function RegistrationTable({
                     </TabsContent>
                 </Tabs>
             </CardContent>
+            <EditRegistrationSheet
+                registration={editingRegistration}
+                open={!!editingRegistration}
+                onOpenChange={(open) => !open && setEditingRegistration(null)}
+            />
         </Card>
     );
 }

@@ -135,3 +135,49 @@ export async function deleteRegistration(id: string) {
         return { success: false, error: error.message };
     }
 }
+
+export async function updateRegistration(id: string, formData: any) {
+    try {
+        const {
+            name,
+            dob,
+            gender,
+            kitSize,
+            aadharNo,
+            schoolCollege,
+            village,
+            phone,
+            paymentMethod,
+        } = formData;
+
+        const age = calculateAge(new Date(dob));
+        const { ageGroup, fee } = getAgeGroupAndFee(age);
+
+        const registration = await prisma.registration.update({
+            where: { id },
+            data: {
+                name,
+                dob: new Date(dob),
+                age,
+                gender,
+                kitSize,
+                aadharNo,
+                schoolCollege,
+                village,
+                phone,
+                ageGroup,
+                fees: fee,
+                paymentMethod,
+            },
+        });
+
+        revalidatePath("/admin");
+        revalidatePath("/subadmin");
+        revalidatePath("/admin/registrations");
+
+        return { success: true, registration };
+    } catch (error: any) {
+        console.error("Update registration error:", error);
+        return { success: false, error: error.message };
+    }
+}

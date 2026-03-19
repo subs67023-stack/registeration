@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { calculateAge, getAgeGroupAndFee } from "@/lib/utils";
-import { registerParticipant } from "@/lib/actions";
+import { registerParticipant, updateRegistration } from "@/lib/actions";
 import { generateRegistrationPDF } from "@/lib/pdf-utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,11 +30,23 @@ const registrationSchema = z.object({
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
 
-export default function RegistrationForm({ subadminId = null }: { subadminId?: string | null }) {
+export default function RegistrationForm({ 
+    subadminId = null, 
+    initialData = null,
+    onSuccess = null
+}: { 
+    subadminId?: string | null;
+    initialData?: any | null;
+    onSuccess?: ((data: any) => void) | null;
+}) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-    const [ageInfo, setAgeInfo] = useState({ age: 0, ageGroup: "N/A", fee: 0 });
+    const [ageInfo, setAgeInfo] = useState({ 
+        age: initialData?.age || 0, 
+        ageGroup: initialData?.ageGroup || "N/A", 
+        fee: initialData?.fees || 0 
+    });
 
     const {
         register,
@@ -45,8 +57,15 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
     } = useForm<RegistrationFormValues>({
         resolver: zodResolver(registrationSchema),
         defaultValues: {
-            gender: "M",
-            paymentMethod: "CASH",
+            name: initialData?.name || "",
+            dob: initialData?.dob ? new Date(initialData.dob).toISOString().split('T')[0] : "",
+            gender: initialData?.gender || "M",
+            kitSize: initialData?.kitSize || "",
+            aadharNo: initialData?.aadharNo || "",
+            schoolCollege: initialData?.schoolCollege || "",
+            village: initialData?.village || "",
+            phone: initialData?.phone || "",
+            paymentMethod: initialData?.paymentMethod || "CASH",
         },
     });
 
@@ -64,9 +83,19 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
         setLoading(true);
         setError(null);
         try {
-            const result = await registerParticipant({ ...data, subadminId });
+            let result;
+            if (initialData) {
+                result = await updateRegistration(initialData.id, data);
+            } else {
+                result = await registerParticipant({ ...data, subadminId });
+            }
+
             if (result.success) {
-                setSuccess(result.registration);
+                if (onSuccess) {
+                    onSuccess(result.registration);
+                } else {
+                    setSuccess(result.registration);
+                }
             } else {
                 setError(result.error);
             }
@@ -248,7 +277,7 @@ export default function RegistrationForm({ subadminId = null }: { subadminId?: s
                                 Confirming...
                             </>
                         ) : (
-                            "REGISTER NOW"
+                            initialData ? "UPDATE REGISTRATION" : "REGISTER NOW"
                         )}
                     </Button>
                 </form>

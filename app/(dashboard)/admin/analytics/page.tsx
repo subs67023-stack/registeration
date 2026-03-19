@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import DashboardHeader from "@/components/dashboard/header";
 import AnalyticsCharts from "@/components/dashboard/analytics-charts";
 import StatsCards from "@/components/dashboard/stats-cards";
+import KitAnalysisTable from "@/components/dashboard/kit-analysis-table";
 
 export default async function AdminAnalyticsPage() {
     const registrations = await prisma.registration.findMany({
@@ -28,6 +29,8 @@ export default async function AdminAnalyticsPage() {
                 <div className="mt-10">
                     <AnalyticsCharts data={registrations} />
                 </div>
+
+                <KitAnalysisTable data={registrations} />
             </div>
         </div>
     );

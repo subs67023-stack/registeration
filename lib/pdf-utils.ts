@@ -101,3 +101,62 @@ export const generateReportPDF = (title: string, data: any[], totals: { count: n
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 };
+
+export const generateKitAnalysisPDF = (data: any[]) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(20);
+    doc.setTextColor(63, 81, 181);
+    doc.text("KIT SIZE ANALYSIS REPORT", 105, 20, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${format(new Date(), "PPPpp")}`, 105, 28, { align: "center" });
+
+    doc.setDrawColor(200);
+    doc.line(20, 35, 190, 35);
+
+    const body: any[] = [];
+    const ageGroups = ["6-12", "13-17", "Open"];
+    
+    let grandTotal = 0;
+
+    ageGroups.forEach(group => {
+        const groupData = data.filter(r => r.ageGroup === group);
+        const sizes = Array.from(new Set(groupData.map(r => r.kitSize).filter(Boolean))) as string[];
+        
+        if (groupData.length > 0) {
+            body.push([{ content: `Category: ${group}`, colSpan: 3, styles: { fillColor: [240, 240, 240], fontStyle: 'bold' } }]);
+            
+            let groupTotal = 0;
+            sizes.forEach(size => {
+                const count = groupData.filter(r => r.kitSize === size).length;
+                body.push(["", size, count]);
+                groupTotal += count;
+            });
+            
+            body.push([{ content: `Total for ${group}`, colSpan: 2, styles: { fontStyle: 'bold' } }, groupTotal]);
+            grandTotal += groupTotal;
+        }
+    });
+
+    body.push([{ content: "GRAND TOTAL", colSpan: 2, styles: { fillColor: [63, 81, 181], textColor: [255, 255, 255], fontStyle: 'bold' } }, { content: grandTotal.toString(), styles: { fillColor: [63, 81, 181], textColor: [255, 255, 255], fontStyle: 'bold' } }]);
+
+    autoTable(doc, {
+        startY: 40,
+        head: [["Group", "Kit Size", "Quantity"]],
+        body: body,
+        theme: "grid",
+        headStyles: { fillColor: [63, 81, 181] },
+    });
+
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `kit-analysis-${format(new Date(), "yyyy-MM-dd")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};
