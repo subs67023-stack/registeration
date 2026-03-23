@@ -14,13 +14,19 @@ import { FileDown, Package } from "lucide-react";
 import { generateKitAnalysisPDF } from "@/lib/pdf-utils";
 
 interface KitAnalysisTableProps {
-    data: any[];
+    registrations: any[];
+    freeKits: any[];
 }
 
-export default function KitAnalysisTable({ data }: KitAnalysisTableProps) {
-    const analysis = data.reduce((acc: any[], current) => {
+export default function KitAnalysisTable({ registrations, freeKits }: KitAnalysisTableProps) {
+    const combinedData = [
+        ...registrations.map(r => ({ ...r, isFree: false })),
+        ...freeKits.map(f => ({ ...f, isFree: true, ageGroup: "Free Kits (Committee)" }))
+    ];
+
+    const analysis = combinedData.reduce((acc: any[], current) => {
         // Group by age group, but separate free kits into their own category
-        const groupName = current.isFree ? "Free Kits (Committee)" : current.ageGroup;
+        const groupName = current.isFree ? "Free Kits (Committee)" : (current.ageGroup || "Unknown");
         const size = current.kitSize || "Unknown";
         
         let group = acc.find(g => g.group === groupName);
@@ -54,7 +60,7 @@ export default function KitAnalysisTable({ data }: KitAnalysisTableProps) {
     });
 
     const handleExport = () => {
-        generateKitAnalysisPDF(data);
+        generateKitAnalysisPDF(registrations, freeKits);
     };
 
     return (

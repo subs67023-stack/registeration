@@ -45,7 +45,7 @@ export default function FreeKitForm() {
             const result = await registerFreeKit(data.name, data.kitSize);
 
             if (result.success) {
-                setSuccess(result.registration);
+                setSuccess(result.freeKit);
                 reset();
             } else {
                 setError(result.error);
@@ -71,8 +71,8 @@ export default function FreeKitForm() {
                         <AlertDescription className="text-indigo-700 text-center space-y-4">
                             <p className="text-sm font-medium opacity-80">Committee member kit has been registered successfully.</p>
                             <div className="bg-white p-6 rounded-2xl border-2 border-indigo-100 shadow-inner text-center">
-                                <p className="text-[10px] uppercase text-indigo-600 font-black tracking-[0.2em] mb-2">Registration ID</p>
-                                <p className="text-3xl font-black font-mono text-indigo-950 tracking-tighter">{success.registrationNumber}</p>
+                                <p className="text-[10px] uppercase text-indigo-600 font-black tracking-[0.2em] mb-2">Member Reference ID</p>
+                                <p className="text-3xl font-black font-mono text-indigo-950 tracking-tighter">{success.id.slice(-6).toUpperCase()}</p>
                                 <div className="mt-4 pt-4 border-t border-indigo-50 flex justify-between items-center">
                                     <div className="text-left">
                                         <p className="text-[10px] uppercase text-gray-400 font-black">Name</p>
@@ -132,9 +132,9 @@ export default function FreeKitForm() {
                     </div>
 
                     <div className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 text-center">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600/60 mb-1">Assigned Group</p>
-                        <p className="text-lg font-black text-indigo-900">13-17 Years</p>
-                        <p className="text-[10px] font-bold text-gray-400 mt-1">Free Distribution • Tagged as Committee</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600/60 mb-1">Status</p>
+                        <p className="text-lg font-black text-indigo-900">Committee Member</p>
+                        <p className="text-[10px] font-bold text-gray-400 mt-1">Free Distribution • Not in Registration Table</p>
                     </div>
 
                     {error && (

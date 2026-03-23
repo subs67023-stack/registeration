@@ -79,26 +79,13 @@ export async function registerParticipant(formData: any) {
     }
 }
 
-export async function registerFreeKit(name: string, kitSize: string) {
+export async function registerFreeKit(name: string, kitSize: string, subadminId?: string) {
     try {
-        const registrationNumber = await getNextRegistrationNumber();
-
-        const registration = await prisma.registration.create({
+        const freeKit = await prisma.freeKit.create({
             data: {
-                registrationNumber,
                 name,
                 kitSize,
-                ageGroup: "13-17",
-                age: 15,
-                dob: new Date("2010-01-01"),
-                fees: 0,
-                isFree: true,
-                gender: "NA",
-                paymentMethod: "FREE",
-                aadharNo: `FREE_${registrationNumber}`,
-                schoolCollege: "NA",
-                village: "NA",
-                phone: "NA",
+                subadminId: subadminId || null,
             },
         });
 
@@ -107,7 +94,7 @@ export async function registerFreeKit(name: string, kitSize: string) {
         revalidatePath("/admin/registrations");
         revalidatePath("/admin/analytics");
 
-        return { success: true, registration };
+        return { success: true, freeKit };
     } catch (error: any) {
         console.error("Free kit registration error:", error);
         return { success: false, error: error.message };

@@ -5,12 +5,17 @@ import StatsCards from "@/components/dashboard/stats-cards";
 import KitAnalysisTable from "@/components/dashboard/kit-analysis-table";
 
 export default async function AdminAnalyticsPage() {
-    const registrations = await prisma.registration.findMany({
-        orderBy: { createdAt: "desc" },
-    });
+    const [registrations, freeKits] = await Promise.all([
+        prisma.registration.findMany({
+            orderBy: { createdAt: "desc" },
+        }),
+        prisma.freeKit.findMany({
+            orderBy: { createdAt: "desc" },
+        })
+    ]);
 
     const stats = {
-        total: registrations.length,
+        total: registrations.length + freeKits.length,
         amount: registrations.reduce((acc: number, curr: any) => acc + curr.fees, 0)
     };
 
@@ -30,7 +35,10 @@ export default async function AdminAnalyticsPage() {
                     <AnalyticsCharts data={registrations} />
                 </div>
 
-                <KitAnalysisTable data={registrations} />
+                <KitAnalysisTable
+                    registrations={registrations}
+                    freeKits={freeKits}
+                />
             </div>
         </div>
     );

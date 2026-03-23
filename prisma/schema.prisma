@@ -19,6 +19,7 @@ model User {
   password      String
   role          Role           @default(SUBADMIN)
   registrations Registration[]
+  freeKits      FreeKit[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -38,9 +39,18 @@ model Registration {
   fees               Int
   kitSize            String?
   paymentMethod      String?
-  isFree             Boolean  @default(false)
   subadminId         String?
   subadmin           User?    @relation(fields: [subadminId], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+}
+
+model FreeKit {
+  id         String   @id @default(cuid())
+  name       String
+  kitSize    String?
+  subadminId String?
+  subadmin   User?    @relation(fields: [subadminId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
