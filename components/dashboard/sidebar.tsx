@@ -10,7 +10,8 @@ import {
     LogOut,
     ClipboardList,
     BarChart3,
-    Menu
+    Menu,
+    Package
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ export default function Sidebar({ user, mobile = false }: { user: any; mobile?: 
         { name: "Overview", href: "/admin", icon: LayoutDashboard },
         { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
         { name: "New Registration", href: "/admin/new", icon: UserPlus },
+        { name: "Free Kit", href: "/admin/free-kit", icon: Package },
         { name: "Registrations", href: "/admin/registrations", icon: ClipboardList },
         { name: "Manage Subadmins", href: "/admin/users", icon: Users },
     ];

@@ -122,7 +122,7 @@ export const generateKitAnalysisPDF = (data: any[]) => {
     let grandTotal = 0;
 
     ageGroups.forEach(group => {
-        const groupData = data.filter(r => r.ageGroup === group);
+        const groupData = data.filter(r => !r.isFree && r.ageGroup === group);
         const sizes = Array.from(new Set(groupData.map(r => r.kitSize).filter(Boolean))) as string[];
         
         if (groupData.length > 0) {
@@ -139,6 +139,21 @@ export const generateKitAnalysisPDF = (data: any[]) => {
             grandTotal += groupTotal;
         }
     });
+
+    // Add Free Kits Section
+    const freeKitsData = data.filter(r => r.isFree);
+    if (freeKitsData.length > 0) {
+        body.push([{ content: "Category: Free Kits (Committee)", colSpan: 3, styles: { fillColor: [240, 240, 240], fontStyle: 'bold' } }]);
+        const sizes = Array.from(new Set(freeKitsData.map(r => r.kitSize).filter(Boolean))) as string[];
+        let groupTotal = 0;
+        sizes.forEach(size => {
+            const count = freeKitsData.filter(r => r.kitSize === size).length;
+            body.push(["", size, count]);
+            groupTotal += count;
+        });
+        body.push([{ content: "Total for Free Kits", colSpan: 2, styles: { fontStyle: 'bold' } }, groupTotal]);
+        grandTotal += groupTotal;
+    }
 
     body.push([{ content: "GRAND TOTAL", colSpan: 2, styles: { fillColor: [63, 81, 181], textColor: [255, 255, 255], fontStyle: 'bold' } }, { content: grandTotal.toString(), styles: { fillColor: [63, 81, 181], textColor: [255, 255, 255], fontStyle: 'bold' } }]);
 

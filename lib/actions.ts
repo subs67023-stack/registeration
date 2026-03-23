@@ -1,9 +1,33 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { generateRegistrationNumber, calculateAge, getAgeGroupAndFee } from "@/lib/utils";
+import { calculateAge, getAgeGroupAndFee } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+
+async function getNextRegistrationNumber() {
+    const recentRegistrations = await prisma.registration.findMany({
+        where: {
+            registrationNumber: {
+                startsWith: 'REG',
+            },
+        },
+        select: { registrationNumber: true }
+    });
+
+    let nextNumber = 1;
+    const validNumbers = recentRegistrations
+        .map((r: { registrationNumber: string }) => r.registrationNumber)
+        .filter((num: string) => num.length <= 8)
+        .map((num: string) => parseInt(num.replace('REG', ''), 10))
+        .filter((num: number) => !isNaN(num));
+
+    if (validNumbers.length > 0) {
+        nextNumber = Math.max(...validNumbers) + 1;
+    }
+
+    return `REG${nextNumber.toString().padStart(4, '0')}`;
+}
 
 export async function registerParticipant(formData: any) {
     try {
@@ -23,30 +47,7 @@ export async function registerParticipant(formData: any) {
         const age = calculateAge(new Date(dob));
         const { ageGroup, fee } = getAgeGroupAndFee(age);
 
-        // Sequential Registration Number REG0001 to REG9999
-        // Fetch registrations to determine the next sequential number.
-        // We filter in memory to ignore old timestamp-based numbers.
-        const recentRegistrations = await prisma.registration.findMany({
-            where: {
-                registrationNumber: {
-                    startsWith: 'REG',
-                },
-            },
-            select: { registrationNumber: true }
-        });
-
-        let nextNumber = 1;
-        const validNumbers = recentRegistrations
-            .map((r: { registrationNumber: string }) => r.registrationNumber)
-            .filter((num: string) => num.length <= 8) // Accommodate up to REG99999 just in case
-            .map((num: string) => parseInt(num.replace('REG', ''), 10))
-            .filter((num: number) => !isNaN(num));
-
-        if (validNumbers.length > 0) {
-            nextNumber = Math.max(...validNumbers) + 1;
-        }
-
-        const registrationNumber = `REG${nextNumber.toString().padStart(4, '0')}`;
+        const registrationNumber = await getNextRegistrationNumber();
 
         const registration = await prisma.registration.create({
             data: {
@@ -74,6 +75,41 @@ export async function registerParticipant(formData: any) {
         return { success: true, registration };
     } catch (error: any) {
         console.error("Registration error:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function registerFreeKit(name: string, kitSize: string) {
+    try {
+        const registrationNumber = await getNextRegistrationNumber();
+
+        const registration = await prisma.registration.create({
+            data: {
+                registrationNumber,
+                name,
+                kitSize,
+                ageGroup: "13-17",
+                age: 15,
+                dob: new Date("2010-01-01"),
+                fees: 0,
+                isFree: true,
+                gender: "NA",
+                paymentMethod: "FREE",
+                aadharNo: `FREE_${registrationNumber}`,
+                schoolCollege: "NA",
+                village: "NA",
+                phone: "NA",
+            },
+        });
+
+        revalidatePath("/admin");
+        revalidatePath("/subadmin");
+        revalidatePath("/admin/registrations");
+        revalidatePath("/admin/analytics");
+
+        return { success: true, registration };
+    } catch (error: any) {
+        console.error("Free kit registration error:", error);
         return { success: false, error: error.message };
     }
 }

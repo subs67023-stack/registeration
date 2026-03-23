@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -27,19 +26,20 @@ model Registration {
   id                 String   @id @default(cuid())
   registrationNumber String   @unique
   name               String
-  dob                DateTime
-  age                Int
-  gender             String
-  aadharNo           String   @unique
-  schoolCollege      String
-  village            String
-  phone              String
+  dob                DateTime?
+  age                Int?
+  gender             String?
+  aadharNo           String?  @unique
+  schoolCollege      String?
+  village            String?
+  phone              String?
   ageGroup           String
   fees               Int
   kitSize            String?
-  paymentMethod      String
+  paymentMethod      String?
+  isFree             Boolean  @default(false)
   subadminId         String?
-  subadmin           User?     @relation(fields: [subadminId], references: [id])
+  subadmin           User?    @relation(fields: [subadminId], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

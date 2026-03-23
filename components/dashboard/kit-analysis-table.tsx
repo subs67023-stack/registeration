@@ -18,22 +18,40 @@ interface KitAnalysisTableProps {
 }
 
 export default function KitAnalysisTable({ data }: KitAnalysisTableProps) {
-    const ageGroups = ["6-12", "13-17", "Open"];
-    
-    const analysis = ageGroups.map(group => {
-        const groupData = data.filter(r => r.ageGroup === group);
-        const sizes = Array.from(new Set(groupData.map(r => r.kitSize).filter(Boolean))) as string[];
-        const sizeCounts = sizes.map(size => ({
-            size,
-            count: groupData.filter(r => r.kitSize === size).length
-        })).sort((a, b) => a.size.localeCompare(b.size));
-
-        return {
-            group,
-            sizeCounts,
-            total: groupData.length
-        };
-    }).filter(g => g.total > 0);
+    const analysis = data.reduce((acc: any[], current) => {
+        // Group by age group, but separate free kits into their own category
+        const groupName = current.isFree ? "Free Kits (Committee)" : current.ageGroup;
+        const size = current.kitSize || "Unknown";
+        
+        let group = acc.find(g => g.group === groupName);
+        if (!group) {
+            group = { group: groupName, sizeCounts: [], total: 0, isFree: current.isFree };
+            acc.push(group);
+        }
+        
+        group.total++;
+        let sizeCount = group.sizeCounts.find((sc: any) => sc.size === size);
+        if (!sizeCount) {
+            sizeCount = { size, count: 0 };
+            group.sizeCounts.push(sizeCount);
+        }
+        sizeCount.count++;
+        
+        return acc;
+    }, []).map(g => ({
+        ...g,
+        sizeCounts: g.sizeCounts.sort((a: any, b: any) => a.size.localeCompare(b.size))
+    })).sort((a, b) => {
+        const order = ["6-12", "13-17", "Open", "Free Kits (Committee)"];
+        const indexA = order.indexOf(a.group);
+        const indexB = order.indexOf(b.group);
+        
+        // If not in order list, put at the end
+        const valA = indexA === -1 ? 99 : indexA;
+        const valB = indexB === -1 ? 99 : indexB;
+        
+        return valA - valB;
+    });
 
     const handleExport = () => {
         generateKitAnalysisPDF(data);
@@ -81,7 +99,7 @@ export default function KitAnalysisTable({ data }: KitAnalysisTableProps) {
                                         </TableCell>
                                         <TableCell className="py-4">
                                             <div className="flex flex-wrap gap-2">
-                                                {item.sizeCounts.map(sc => (
+                                                {item.sizeCounts.map((sc: any) => (
                                                     <div key={sc.size} className="bg-white border-2 border-indigo-100 px-3 py-1.5 rounded-xl shadow-sm flex items-center space-x-2">
                                                         <span className="text-[10px] font-black text-gray-400 uppercase">Size</span>
                                                         <span className="font-black text-indigo-600 font-mono">{sc.size}</span>
