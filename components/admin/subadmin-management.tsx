@@ -15,12 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Plus, Trash2 } from "lucide-react";
-import { createSubadmin, deleteSubadmin } from "@/lib/actions";
+import { createSubadmin, deleteSubadmin, toggleUserStatus } from "@/lib/actions";
 import { format } from "date-fns";
+import { useTransition } from "react";
 
 export default function SubadminManagement({ initialSubadmins }: { initialSubadmins: any[] }) {
     const [subadmins, setSubadmins] = useState(initialSubadmins);
     const [loading, setLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
 
@@ -58,6 +60,20 @@ export default function SubadminManagement({ initialSubadmins }: { initialSubadm
         } catch (err) {
             alert("Failed to delete subadmin");
         }
+    };
+
+    const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+        const newStatus = !currentStatus;
+        startTransition(async () => {
+            try {
+                const res = await toggleUserStatus(id, newStatus);
+                if (res.success) {
+                    setSubadmins(subadmins.map(s => s.id === id ? { ...s, isActive: newStatus } : s));
+                }
+            } catch (err) {
+                alert("Failed to update status");
+            }
+        });
     };
 
     return (
@@ -125,6 +141,7 @@ export default function SubadminManagement({ initialSubadmins }: { initialSubadm
                             <TableRow className="bg-gray-100">
                                 <TableHead className="font-bold">Name</TableHead>
                                 <TableHead className="font-bold">Email</TableHead>
+                                <TableHead className="font-bold">Status</TableHead>
                                 <TableHead className="font-bold">Joined On</TableHead>
                                 <TableHead className="text-right font-bold">Actions</TableHead>
                             </TableRow>
@@ -132,7 +149,7 @@ export default function SubadminManagement({ initialSubadmins }: { initialSubadm
                         <TableBody>
                             {subadmins.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="h-32 text-center text-gray-500 italic">
+                                    <TableCell colSpan={5} className="h-32 text-center text-gray-500 italic">
                                         No subadmins created yet.
                                     </TableCell>
                                 </TableRow>
@@ -141,18 +158,34 @@ export default function SubadminManagement({ initialSubadmins }: { initialSubadm
                                     <TableRow key={sub.id} className="hover:bg-gray-50 transition-colors">
                                         <TableCell className="font-medium text-gray-900">{sub.name}</TableCell>
                                         <TableCell className="text-gray-600">{sub.email}</TableCell>
+                                        <TableCell>
+                                            <span className={`px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${sub.isActive !== false ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-red-50 text-red-700 border-red-100"}`}>
+                                                {sub.isActive !== false ? "Active" : "Inactive"}
+                                            </span>
+                                        </TableCell>
                                         <TableCell className="text-gray-500 text-xs">
                                             {format(new Date(sub.createdAt), "dd MMM yyyy")}
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => handleDelete(sub.id)}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <div className="flex items-center justify-end space-x-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className={`text-xs font-bold ${sub.isActive !== false ? "text-red-500 hover:text-red-600 hover:bg-red-50" : "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"}`}
+                                                    onClick={() => handleToggleStatus(sub.id, sub.isActive !== false)}
+                                                    disabled={isPending}
+                                                >
+                                                    {sub.isActive !== false ? "Deactivate" : "Activate"}
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                    onClick={() => handleDelete(sub.id)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))

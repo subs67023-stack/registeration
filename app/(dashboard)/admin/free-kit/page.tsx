@@ -12,7 +12,7 @@ export default async function FreeKitPage() {
         redirect("/dashboard");
     }
 
-    const freeKits = await prisma.freeKit.findMany({
+    const freeKits = await (prisma as any).freeKit.findMany({
         orderBy: { createdAt: "desc" },
         include: { subadmin: true }
     });

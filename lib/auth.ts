@@ -37,6 +37,10 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid password");
                 }
 
+                if ((user as any).isActive === false) {
+                    throw new Error("Account is deactivated");
+                }
+
                 return {
                     id: user.id,
                     email: user.email,

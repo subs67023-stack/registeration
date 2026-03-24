@@ -81,7 +81,7 @@ export async function registerParticipant(formData: any) {
 
 export async function registerFreeKit(name: string, kitSize: string, gender: string, subadminId?: string) {
     try {
-        const freeKit = await prisma.freeKit.create({
+        const freeKit = await (prisma as any).freeKit.create({
             data: {
                 name,
                 kitSize,
@@ -207,7 +207,7 @@ export async function updateRegistration(id: string, formData: any) {
 }
 export async function deleteFreeKit(id: string) {
     try {
-        await prisma.freeKit.delete({
+        await (prisma as any).freeKit.delete({
             where: { id },
         });
         revalidatePath("/admin/free-kit");
@@ -215,6 +215,20 @@ export async function deleteFreeKit(id: string) {
         return { success: true };
     } catch (error: any) {
         console.error("Delete free kit error:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function toggleUserStatus(id: string, isActive: boolean) {
+    try {
+        await (prisma as any).user.update({
+            where: { id },
+            data: { isActive },
+        });
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Toggle user status error:", error);
         return { success: false, error: error.message };
     }
 }
