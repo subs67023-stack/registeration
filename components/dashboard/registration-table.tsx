@@ -29,19 +29,21 @@ export default function RegistrationTable({
     groups: any;
 }) {
     const [activeTab, setActiveTab] = useState("All");
-    const [filterMode, setFilterMode] = useState<"category" | "subadmin">("category");
+    const [filterMode, setFilterMode] = useState<"category" | "subadmin" | "gender">("category");
     const [isPending, startTransition] = useTransition();
     const [editingRegistration, setEditingRegistration] = useState<any | null>(null);
 
     // Get unique subadmins from the data
     const subadmins = Array.from(new Set(data.map(item => item.subadmin?.name).filter(Boolean))) as string[];
+    // Get unique genders from the data
+    const genders = Array.from(new Set(data.map(item => item.gender).filter(Boolean))) as string[];
 
     // Calculate dynamic data based on filter mode
     const currentData = filterMode === "category"
         ? (groups[activeTab] || [])
-        : activeTab === "All"
-            ? data
-            : data.filter(item => item.subadmin?.name === activeTab);
+        : filterMode === "subadmin"
+            ? (activeTab === "All" ? data : data.filter(item => item.subadmin?.name === activeTab))
+            : (activeTab === "All" ? data : data.filter(item => item.gender === activeTab));
 
     const handleExport = () => {
         const totals = {
@@ -60,7 +62,7 @@ export default function RegistrationTable({
     };
 
     const handleWhatsApp = (item: any) => {
-        const message = `🙏🏻नमस्कार, 🙏🏻\n\n*${item.name}*\nआपण मॅरेथॉन स्पर्धेसाठी रजिस्ट्रेशन केले आहे.🏃🏻‍♀️🏃🏻\n \n📅 तारीख : 29 March 2026\n📍ठिकाण : मंगलमूर्ती हॉल पटनकोडोली \n⏰  वेळ    : स. 6 वाजता \n\nREG NO       -  ${item.registrationNumber}\nNAME          - ${item.name}\nCATEGORY   - ${item.ageGroup}\nKIT SIZE       - ${item.kitSize || 'N/A'}\nFEES            - ₹${item.fees}\n\nअधिक माहिती साठी खालील ग्रुप ला जॉइन करा.\nव्हॉट्सॲप लिंक (मॅरेथॉन माहिती)\nhttps://chat.whatsapp.com/Bpn8V7jiPGPFhL4eqRADlb\nइंस्टाग्राम लिंक \nhttps://www.instagram.com/rotaract_pattankodoli?igsh=MmpjODF1Z2FpcDYz\n \nनियम व अटी \n1. स्पर्धेत सहभागी होण्यासाठी नोंदणी करणे आवश्यक आहे.\n2. स्पर्धकांनी वेळेवर स्पर्धेच्या ठिकाणी उपस्थित राहणे बंधनकारक आहे.\n3. स्पर्धकांनी स्पर्धेदरम्यान आयोजकांनी दिलेला बिब नंबर / आयडी लावणे आवश्यक आहे.\n4. स्पर्धेदरम्यान कोणत्याही प्रकारची फसवणूक किंवा शॉर्टकट वापरल्यास स्पर्धक अपात्र ठरवला जाईल.\n5. 18 वर्षांखालील स्पर्धकांसाठी पालकांची परवानगी आवश्यक आहे.\n6. स्पर्धकांनी स्वतःच्या आरोग्याची जबाबदारी स्वतः घ्यावी.\n7. आयोजक समितीचा निर्णय अंतिम व सर्वांसाठी बंधनकारक राहील.\n8. स्पर्धेच्या दरम्यान सुरक्षिततेचे सर्व नियम पाळणे आवश्यक आहे.\n9. स्पर्धा मार्गावर कचरा टाकू नये व स्वच्छता राखावी.\n10. स्पर्धेतील विजेत्यांना आयोजकांच्या वतीने पारितोषिक देण्यात येईल.\n\n\nधन्यवाद 🙏🏻\n*ROTARACT CLUB PATTANKODOLI*`;
+        const message = `🙏🏻नमस्कार, 🙏🏻\n\n*${item.name}*\nआपण मॅरेथॉन स्पर्धेसाठी रजिस्ट्रेशन केले आहे.🏃🏻‍♀️🏃🏻\n \n📅 तारीख : 29 March 2026\n📍ठिकाण : मंगलमूर्ती हॉल पटनकोडोली \n⏰  वेळ    : स. 6 वाजता \n\nREG NO       -  ${item.registrationNumber}\nNAME          - ${item.name}\nCATEGORY   - ${item.ageGroup}\nKIT SIZE       - ${item.kitSize || 'N/A'}\nFEES            - ₹${item.fees}\n\nअधिक माहिती साठी खालील ग्रुप ला जॉइन करा.\nव्हॉट्सॲप लिंक (मॅरेथॉन माहिती)\nhttps://chat.whatsapp.com/Bpn8V7jiPGPFhL4eqRADlb\nइंस्टाग्राम लिंक \nhttps://www.instagram.com/rotaract_pattankodoli?igsh=MmpjODF1Z2FpcDYz\n \nनियम व अटी \n1. स्पर्धेत सहभागी होण्यासाठी नोंदणी करणे आवश्यक आहे.\n2. स्पर्धकांनी वेळेवर स्पर्धेच्या ठिकाणी उपस्थित राहणे बंधनकारक आहे.\n3. स्पर्धकांनी स्पर्धेदरम्यान आयोजकांनी दिलेला बिब नंबर / आयडी लावणे आवश्यक आहे.\n4. स्पर्धेदरम्यान कोणत्याही प्रकारची फसवणूक किंवा शॉर्टकट वापरल्यास स्पर्धक अपात्र ठरवला जाईल.\n5. 18 वर्षांखालील स्पर्धकांसाठी पालकांची परवानगी आवश्यक आहे.\n6. स्पर्धकांनी स्वतःच्या आरोग्याची जबाबदारी स्वतः घ्यावी.\n7. आयोजक समितीचा निर्णय अंतिम व सर्वांसाठी बंधनकारक राईल.\n8. स्पर्धेच्या दरम्यान सुरक्षिततेचे सर्व नियम पाळणे आवश्यक आहे.\n9. स्पर्धा मार्गावर कचरा टाकू नये व स्वच्छता राखावी.\n10. स्पर्धेतील विजेत्यांना आयोजकांच्या वतीने पारितोषिक देण्यात येईल.\n\n\nधन्यवाद 🙏🏻\n*ROTARACT CLUB PATTANKODOLI*`;
         window.open(`https://wa.me/91${item.phone}?text=${encodeURIComponent(message)}`, '_blank');
     };
 
@@ -71,7 +73,7 @@ export default function RegistrationTable({
                     <div className="w-2 h-8 bg-rotaract-red rounded-full hidden sm:block" />
                     <div>
                         <CardTitle className="text-2xl font-black text-rotaract-blue tracking-tight">{title}</CardTitle>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Filter by: {filterMode === "category" ? "Age Groups" : "Subadmins"}</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Filter by: {filterMode === "category" ? "Age Groups" : filterMode === "subadmin" ? "Subadmins" : "Gender"}</p>
                     </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -87,6 +89,12 @@ export default function RegistrationTable({
                             className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "subadmin" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                         >
                             By Team
+                        </button>
+                        <button
+                            onClick={() => { setFilterMode("gender"); setActiveTab("All"); }}
+                            className={`px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filterMode === "gender" ? "bg-white text-rotaract-blue shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
+                        >
+                            By Gender
                         </button>
                     </div>
                     <Button onClick={handleExport} className="bg-rotaract-red hover:bg-red-700 font-black text-xs uppercase tracking-widest h-11 px-6 rounded-xl shadow-lg shadow-red-100 transition-all active:scale-95">
@@ -106,13 +114,18 @@ export default function RegistrationTable({
                                     <TabsTrigger value="13-17" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">13–17</TabsTrigger>
                                     <TabsTrigger value="Open" className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white">Open</TabsTrigger>
                                 </>
-                            ) : (
+                            ) : filterMode === "subadmin" ? (
                                 subadmins.map(name => (
                                     <TabsTrigger key={name} value={name} className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white whitespace-nowrap px-4">{name}</TabsTrigger>
+                                ))
+                            ) : (
+                                genders.map(gender => (
+                                    <TabsTrigger key={gender} value={gender} className="rounded-lg font-bold data-[state=active]:bg-rotaract-blue data-[state=active]:text-white whitespace-nowrap px-4">{gender}</TabsTrigger>
                                 ))
                             )}
                         </TabsList>
                     </div>
+
 
                     <TabsContent value={activeTab} className="m-0">
                         {/* Mobile Grid View */}

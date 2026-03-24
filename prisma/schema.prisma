@@ -48,6 +48,7 @@ model Registration {
 model FreeKit {
   id         String   @id @default(cuid())
   name       String
+  gender     String?
   kitSize    String?
   subadminId String?
   subadmin   User?    @relation(fields: [subadminId], references: [id])

@@ -79,12 +79,13 @@ export async function registerParticipant(formData: any) {
     }
 }
 
-export async function registerFreeKit(name: string, kitSize: string, subadminId?: string) {
+export async function registerFreeKit(name: string, kitSize: string, gender: string, subadminId?: string) {
     try {
         const freeKit = await prisma.freeKit.create({
             data: {
                 name,
                 kitSize,
+                gender,
                 subadminId: subadminId || null,
             },
         });
@@ -201,6 +202,19 @@ export async function updateRegistration(id: string, formData: any) {
         return { success: true, registration };
     } catch (error: any) {
         console.error("Update registration error:", error);
+        return { success: false, error: error.message };
+    }
+}
+export async function deleteFreeKit(id: string) {
+    try {
+        await prisma.freeKit.delete({
+            where: { id },
+        });
+        revalidatePath("/admin/free-kit");
+        revalidatePath("/admin/registrations");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Delete free kit error:", error);
         return { success: false, error: error.message };
     }
 }

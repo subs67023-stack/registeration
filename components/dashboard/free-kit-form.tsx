@@ -15,6 +15,7 @@ import Logo from "@/components/logo";
 
 const freeKitSchema = z.object({
     name: z.string().min(2, "Name is required"),
+    gender: z.string().min(1, "Gender is required"),
     kitSize: z.string().min(1, "Kit Size is required"),
 });
 
@@ -34,6 +35,7 @@ export default function FreeKitForm() {
         resolver: zodResolver(freeKitSchema),
         defaultValues: {
             name: "",
+            gender: "",
             kitSize: "",
         },
     });
@@ -42,7 +44,7 @@ export default function FreeKitForm() {
         setLoading(true);
         setError(null);
         try {
-            const result = await registerFreeKit(data.name, data.kitSize);
+            const result = await registerFreeKit(data.name, data.kitSize, data.gender);
 
             if (result.success) {
                 setSuccess(result.freeKit);
@@ -119,6 +121,21 @@ export default function FreeKitForm() {
                             <Label htmlFor="name" className="text-xs font-black text-gray-400 uppercase tracking-wider ml-1">Full Name</Label>
                             <Input id="name" {...register("name")} placeholder="Committee Member Name" spellCheck={false} className="h-14 border-2 border-gray-100 bg-gray-50/50 shadow-sm focus:border-indigo-600 focus:bg-white transition-all rounded-xl text-black font-bold text-base" />
                             {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name.message}</p>}
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="gender" className="text-xs font-black text-gray-400 uppercase tracking-wider ml-1">Gender</Label>
+                            <select
+                                id="gender"
+                                {...register("gender")}
+                                className="w-full h-14 border-2 border-gray-100 bg-gray-50/50 shadow-sm focus:border-indigo-600 focus:bg-white transition-all rounded-xl text-black font-bold text-base px-4 appearance-none"
+                            >
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            {errors.gender && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.gender.message}</p>}
                         </div>
 
                         <div className="space-y-1.5">
