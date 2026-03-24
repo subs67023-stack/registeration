@@ -232,3 +232,17 @@ export async function toggleUserStatus(id: string, isActive: boolean) {
         return { success: false, error: error.message };
     }
 }
+
+export async function updateFreeKit(id: string, name: string, kitSize: string, gender: string) {
+    try {
+        await (prisma as any).freeKit.update({
+            where: { id },
+            data: { name, kitSize, gender },
+        });
+        revalidatePath("/admin/free-kit");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Update free kit error:", error);
+        return { success: false, error: error.message };
+    }
+}

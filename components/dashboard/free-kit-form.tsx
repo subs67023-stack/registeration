@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { registerFreeKit } from "@/lib/actions";
+import { registerFreeKit, updateFreeKit } from "@/lib/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,13 @@ const freeKitSchema = z.object({
 
 type FreeKitFormValues = z.infer<typeof freeKitSchema>;
 
-export default function FreeKitForm() {
+export default function FreeKitForm({
+    initialData,
+    onSuccess
+}: {
+    initialData?: any;
+    onSuccess?: () => void
+}) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -34,9 +40,9 @@ export default function FreeKitForm() {
     } = useForm<FreeKitFormValues>({
         resolver: zodResolver(freeKitSchema),
         defaultValues: {
-            name: "",
-            gender: "",
-            kitSize: "",
+            name: initialData?.name || "",
+            gender: initialData?.gender || "",
+            kitSize: initialData?.kitSize || "",
         },
     });
 
@@ -44,13 +50,22 @@ export default function FreeKitForm() {
         setLoading(true);
         setError(null);
         try {
-            const result = await registerFreeKit(data.name, data.kitSize, data.gender);
-
-            if (result.success) {
-                setSuccess(result.freeKit);
-                reset();
+            if (initialData) {
+                const result = await updateFreeKit(initialData.id, data.name, data.kitSize, data.gender);
+                if (result.success) {
+                    if (onSuccess) onSuccess();
+                } else {
+                    setError(result.error);
+                }
             } else {
-                setError(result.error);
+                const result = await registerFreeKit(data.name, data.kitSize, data.gender);
+                if (result.success) {
+                    setSuccess(result.freeKit);
+                    reset();
+                    if (onSuccess) onSuccess();
+                } else {
+                    setError(result.error);
+                }
             }
         } catch (err) {
             setError("An unexpected error occurred.");

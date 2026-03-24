@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, MessageCircle } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { deleteFreeKit } from "@/lib/actions";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
+import EditFreeKitSheet from "./edit-free-kit-sheet";
 
 export default function FreeKitTable({
     data
@@ -21,6 +22,7 @@ export default function FreeKitTable({
     data: any[];
 }) {
     const [isPending, startTransition] = useTransition();
+    const [editingFreeKit, setEditingFreeKit] = useState<any | null>(null);
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this free kit?")) {
@@ -31,15 +33,10 @@ export default function FreeKitTable({
     };
 
     return (
-        <Card className="shadow-2xl border-none overflow-hidden rounded-[1.5rem]">
-            <CardHeader className="border-b bg-white flex flex-col sm:flex-row items-center justify-between gap-4 p-6">
-                <div className="flex items-center space-x-3 text-center sm:text-left">
-                    <div className="w-2 h-8 bg-green-500 rounded-full hidden sm:block" />
-                    <div>
-                        <CardTitle className="text-2xl font-black text-indigo-950 tracking-tight">Free Kit Records</CardTitle>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Total: {data.length}</p>
-                    </div>
-                </div>
+        <Card className="shadow-2xl border-none overflow-hidden rounded-[1.5rem] mt-8">
+            <CardHeader className="border-b bg-white p-6">
+                <CardTitle className="text-2xl font-black text-indigo-950 tracking-tight">Free Kit Registrations</CardTitle>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Committee Member List</p>
             </CardHeader>
             <CardContent className="p-0">
                 <div className="overflow-x-auto">
@@ -75,10 +72,13 @@ export default function FreeKitTable({
                                         </TableCell>
                                         <TableCell className="font-bold text-[10px] uppercase text-gray-500">{item.subadmin?.name || "Main Admin"}</TableCell>
                                         <TableCell className="text-gray-400 text-[10px] font-black uppercase tracking-widest">
-                                            {format(new Date(item.createdAt), "dd MMM yyyy")}
+                                            {format(new Date(item.createdAt), "dd MMM")}
                                         </TableCell>
                                         <TableCell className="px-6 text-right">
                                             <div className="flex items-center justify-end space-x-1">
+                                                <Button onClick={() => setEditingFreeKit(item)} variant="ghost" size="icon" className="h-8 w-8 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50">
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
                                                 <Button onClick={() => handleDelete(item.id)} variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50" disabled={isPending}>
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -91,6 +91,11 @@ export default function FreeKitTable({
                     </Table>
                 </div>
             </CardContent>
+            <EditFreeKitSheet
+                freeKit={editingFreeKit}
+                open={!!editingFreeKit}
+                onOpenChange={(open) => !open && setEditingFreeKit(null)}
+            />
         </Card>
     );
 }
