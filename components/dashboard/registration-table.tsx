@@ -12,7 +12,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { FileDown, Trash2, MessageCircle, Pencil } from "lucide-react";
+import { FileDown, Trash2, MessageCircle, Pencil, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { generateReportPDF } from "@/lib/pdf-utils";
 import { deleteRegistration } from "@/lib/actions";
@@ -32,6 +33,7 @@ export default function RegistrationTable({
     const [filterMode, setFilterMode] = useState<"category" | "subadmin" | "gender">("category");
     const [isPending, startTransition] = useTransition();
     const [editingRegistration, setEditingRegistration] = useState<any | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Get unique subadmins from the data
     const subadmins = Array.from(new Set(data.map(item => item.subadmin?.name).filter(Boolean))) as string[];
@@ -45,12 +47,22 @@ export default function RegistrationTable({
             ? (activeTab === "All" ? data : data.filter(item => item.subadmin?.name === activeTab))
             : (activeTab === "All" ? data : data.filter(item => item.gender === activeTab));
 
+    const searchedData = currentData.filter((item: any) => {
+        if (!searchQuery) return true;
+        const query = searchQuery.toLowerCase();
+        return (
+            item.name?.toLowerCase().includes(query) ||
+            item.phone?.toLowerCase().includes(query) ||
+            item.registrationNumber?.toLowerCase().includes(query)
+        );
+    });
+
     const handleExport = () => {
         const totals = {
-            count: currentData.length,
-            amount: currentData.reduce((acc: number, curr: any) => acc + curr.fees, 0)
+            count: searchedData.length,
+            amount: searchedData.reduce((acc: number, curr: any) => acc + curr.fees, 0)
         };
-        generateReportPDF(`${title} - ${activeTab} (${filterMode})`, currentData, totals);
+        generateReportPDF(`${title} - ${activeTab} (${filterMode})`, searchedData, totals);
     };
 
     const handleDelete = async (id: string) => {
@@ -75,6 +87,15 @@ export default function RegistrationTable({
                         <CardTitle className="text-2xl font-black text-rotaract-blue tracking-tight">{title}</CardTitle>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Filter by: {filterMode === "category" ? "Age Groups" : filterMode === "subadmin" ? "Subadmins" : "Gender"}</p>
                     </div>
+                </div>
+                <div className="flex-1 max-w-sm relative group mx-4 hidden md:block">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-rotaract-blue transition-colors" />
+                    <Input
+                        placeholder="Search by name, phone or reg no..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 h-11 bg-gray-50/50 border-gray-200 rounded-xl focus-visible:ring-rotaract-blue focus-visible:bg-white transition-all font-medium"
+                    />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <div className="flex bg-gray-100 p-1 rounded-xl h-11 border border-gray-200 shadow-inner">
@@ -101,6 +122,15 @@ export default function RegistrationTable({
                         <FileDown className="mr-2 h-4 w-4" />
                         Export
                     </Button>
+                </div>
+                <div className="w-full relative group md:hidden">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-rotaract-blue transition-colors" />
+                    <Input
+                        placeholder="Search name, phone, reg no..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 h-11 bg-gray-50/50 border-gray-200 rounded-xl focus-visible:ring-rotaract-blue focus-visible:bg-white transition-all font-medium"
+                    />
                 </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -130,12 +160,12 @@ export default function RegistrationTable({
                     <TabsContent value={activeTab} className="m-0">
                         {/* Mobile Grid View */}
                         <div className="block lg:hidden p-4 space-y-4">
-                            {currentData.length === 0 ? (
+                            {searchedData.length === 0 ? (
                                 <div className="h-32 flex items-center justify-center text-gray-400 font-bold italic">
-                                    No registrations found.
+                                    {searchQuery ? "No matching records found." : "No registrations found."}
                                 </div>
                             ) : (
-                                currentData.map((item: any, index: number) => (
+                                searchedData.map((item: any, index: number) => (
                                     <div key={item.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-4">
                                         <div className="flex justify-between items-start">
                                             <div className="space-y-1">
@@ -208,14 +238,14 @@ export default function RegistrationTable({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {currentData.length === 0 ? (
+                                    {searchedData.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={9} className="h-48 text-center text-gray-400 font-bold italic">
-                                                No registrations found for this category.
+                                                {searchQuery ? "No matching records found." : "No registrations found for this category."}
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        currentData.map((item: any, index: number) => (
+                                        searchedData.map((item: any, index: number) => (
                                             <TableRow key={item.id} className="hover:bg-gray-50/50 transition-all border-b group">
                                                 <TableCell className="px-6 font-bold text-gray-400">{index + 1}</TableCell>
                                                 <TableCell className="font-mono font-black text-rotaract-blue tracking-tighter">{item.registrationNumber}</TableCell>

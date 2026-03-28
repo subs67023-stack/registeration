@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { deleteFreeKit } from "@/lib/actions";
 import { useTransition, useState } from "react";
@@ -23,6 +24,12 @@ export default function FreeKitTable({
 }) {
     const [isPending, startTransition] = useTransition();
     const [editingFreeKit, setEditingFreeKit] = useState<any | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredData = data.filter((item: any) => {
+        if (!searchQuery) return true;
+        return item.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    });
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this free kit?")) {
@@ -34,9 +41,20 @@ export default function FreeKitTable({
 
     return (
         <Card className="shadow-2xl border-none overflow-hidden rounded-[1.5rem] mt-8">
-            <CardHeader className="border-b bg-white p-6">
-                <CardTitle className="text-2xl font-black text-indigo-950 tracking-tight">Free Kit Registrations</CardTitle>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Committee Member List</p>
+            <CardHeader className="border-b bg-white p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <CardTitle className="text-2xl font-black text-indigo-950 tracking-tight">Free Kit Registrations</CardTitle>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Committee Member List</p>
+                </div>
+                <div className="relative group w-full max-w-sm">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-indigo-600 transition-colors" />
+                    <Input
+                        placeholder="Search by name..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 h-11 bg-gray-50/50 border-gray-200 rounded-xl focus-visible:ring-indigo-600 focus-visible:bg-white transition-all font-medium"
+                    />
+                </div>
             </CardHeader>
             <CardContent className="p-0">
                 <div className="overflow-x-auto">
@@ -53,14 +71,14 @@ export default function FreeKitTable({
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.length === 0 ? (
+                            {filteredData.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={7} className="h-48 text-center text-gray-400 font-bold italic">
-                                        No free kit registrations found.
+                                        {searchQuery ? "No matching records found." : "No free kit registrations found."}
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                data.map((item: any, index: number) => (
+                                filteredData.map((item: any, index: number) => (
                                     <TableRow key={item.id} className="hover:bg-gray-50/50 transition-all border-b group">
                                         <TableCell className="px-6 font-bold text-gray-400">{index + 1}</TableCell>
                                         <TableCell className="font-black text-gray-900">{item.name}</TableCell>
